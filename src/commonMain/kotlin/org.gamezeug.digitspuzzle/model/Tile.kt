@@ -30,6 +30,10 @@ data class Tile(
     fun hasRightSegment() = segmentOccupationMask and rightSegmentOnlyMask == rightSegmentOnlyMask
     fun hasBottomSegment() = segmentOccupationMask and bottomSegmentOnlyMask == bottomSegmentOnlyMask
 
+    fun isDisjoint(other: Tile): Boolean {
+        return (this.segmentOccupationMask and other.segmentOccupationMask) == 0
+    }
+
     override fun toString(): String {
         val leftMark = getMark(hasLeftSegment())
         val topMark = getMark(hasTopSegment())

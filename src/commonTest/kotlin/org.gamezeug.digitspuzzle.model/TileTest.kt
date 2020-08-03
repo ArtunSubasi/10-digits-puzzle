@@ -61,6 +61,28 @@ class TileTest {
     }
 
     @Test
+    fun `isDisjoint - both empty`() {
+        assertTrue(Tile().isDisjoint(Tile()))
+    }
+
+    @Test
+    fun `isDisjoint - empty and full`() {
+        assertTrue(Tile().isDisjoint(Tile(0b1111)))
+    }
+
+    @Test
+    fun `isDisjoint - fifty fifty edge case`() {
+        val tileWithTopAndRightSegments = Tile(0b0110)
+        val tileWithBottomAndLeftSegments = Tile(0b1001)
+        assertTrue(tileWithTopAndRightSegments.isDisjoint(tileWithBottomAndLeftSegments))
+    }
+
+    @Test
+    fun `isDisjoint - both full`() {
+        assertFalse(Tile(0b1111).isDisjoint(Tile(0b1111)))
+    }
+
+    @Test
     fun `toString with empty tile`() {
         val tile = Tile(0b0000)
         val expected = """
