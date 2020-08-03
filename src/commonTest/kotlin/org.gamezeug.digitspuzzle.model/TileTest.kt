@@ -1,6 +1,5 @@
 package org.gamezeug.digitspuzzle.model
 
-import com.soywiz.krypto.fillRandomBytes
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -120,6 +119,21 @@ class TileTest {
             [ 2 ]
         """.trimIndent()
         assertEquals(expected, Tile.Builder().withBottomSegment().withCharToPrint('2').build().toString())
+    }
+
+    @Test
+    fun `toStringFirstLine with full tile`() {
+        assertEquals("[ X ]", fullTile().toStringFirstLine())
+    }
+
+    @Test
+    fun `toStringSecondLine with full tile`() {
+        assertEquals("[X X]", fullTile().toStringSecondLine())
+    }
+
+    @Test
+    fun `toStringThirdLine with full tile`() {
+        assertEquals("[ X ]", fullTile().toStringThirdLine())
     }
 
 }

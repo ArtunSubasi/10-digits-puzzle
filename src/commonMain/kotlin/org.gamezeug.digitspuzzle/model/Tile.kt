@@ -33,15 +33,23 @@ data class Tile(val segmentMask: Int, val charToPrint: Char) {
     }
 
     override fun toString(): String {
-        val leftMark = getMark(hasLeftSegment())
+        return toStringFirstLine() + "\n" + toStringSecondLine() + "\n" + toStringThirdLine()
+    }
+
+    fun toStringFirstLine(): String {
         val topMark = getMark(hasTopSegment())
+        return "[ $topMark ]"
+    }
+
+    fun toStringSecondLine(): String {
+        val leftMark = getMark(hasLeftSegment())
         val rightMark = getMark(hasRightSegment())
+        return "[$leftMark $rightMark]"
+    }
+
+    fun toStringThirdLine(): String {
         val bottomMark = getMark(hasBottomSegment())
-        return """
-            [ $topMark ]
-            [$leftMark $rightMark]
-            [ $bottomMark ]
-        """.trimIndent()
+        return "[ $bottomMark ]"
     }
 
     private fun getMark(hasSegment: Boolean) = if (hasSegment) charToPrint else ' '
