@@ -10,54 +10,54 @@ class TileTest {
     @Test
     fun `hasSegments - empty tile`() {
         val tile = Tile(0b0000)
-        assertFalse(tile.hasLeft())
-        assertFalse(tile.hasTop())
-        assertFalse(tile.hasRight())
-        assertFalse(tile.hasBottom())
+        assertFalse(tile.hasLeftSegment())
+        assertFalse(tile.hasTopSegment())
+        assertFalse(tile.hasRightSegment())
+        assertFalse(tile.hasBottomSegment())
     }
 
     @Test
     fun `hasSegments - full tile`() {
         val tile = Tile(0b1111)
-        assertTrue(tile.hasLeft())
-        assertTrue(tile.hasTop())
-        assertTrue(tile.hasRight())
-        assertTrue(tile.hasBottom())
+        assertTrue(tile.hasLeftSegment())
+        assertTrue(tile.hasTopSegment())
+        assertTrue(tile.hasRightSegment())
+        assertTrue(tile.hasBottomSegment())
     }
 
     @Test
     fun `hasSegments - left segment only`() {
         val tile = Tile(0b1000)
-        assertTrue(tile.hasLeft())
-        assertFalse(tile.hasTop())
-        assertFalse(tile.hasRight())
+        assertTrue(tile.hasLeftSegment())
+        assertFalse(tile.hasTopSegment())
+        assertFalse(tile.hasRightSegment())
     }
 
     @Test
     fun `hasSegments - top segment only`() {
         val tile = Tile(0b0100)
-        assertFalse(tile.hasLeft())
-        assertTrue(tile.hasTop())
-        assertFalse(tile.hasRight())
-        assertFalse(tile.hasBottom())
+        assertFalse(tile.hasLeftSegment())
+        assertTrue(tile.hasTopSegment())
+        assertFalse(tile.hasRightSegment())
+        assertFalse(tile.hasBottomSegment())
     }
 
     @Test
     fun `hasSegments - right segment only`() {
         val tile = Tile(0b0010)
-        assertFalse(tile.hasLeft())
-        assertFalse(tile.hasTop())
-        assertTrue(tile.hasRight())
-        assertFalse(tile.hasBottom())
+        assertFalse(tile.hasLeftSegment())
+        assertFalse(tile.hasTopSegment())
+        assertTrue(tile.hasRightSegment())
+        assertFalse(tile.hasBottomSegment())
     }
 
     @Test
     fun `hasSegments - bottom segment only`() {
         val tile = Tile(0b0001)
-        assertFalse(tile.hasLeft())
-        assertFalse(tile.hasTop())
-        assertFalse(tile.hasRight())
-        assertTrue(tile.hasBottom())
+        assertFalse(tile.hasLeftSegment())
+        assertFalse(tile.hasTopSegment())
+        assertFalse(tile.hasRightSegment())
+        assertTrue(tile.hasBottomSegment())
     }
 
     @Test
