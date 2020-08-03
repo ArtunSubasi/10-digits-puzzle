@@ -82,5 +82,14 @@ data class Tile(val segmentMask: Int, val charToPrint: Char) {
     }
 }
 
-fun emptyTile() = Tile.Builder().build()
-fun fullTile() = Tile.Builder().withLeftSegment().withTopSegment().withRightSegment().withBottomSegment().build()
+fun emptyTile(charToPrint: Char = 'X') = Tile.Builder().withCharToPrint(charToPrint).build()
+
+fun fullTile(charToPrint: Char = 'X'): Tile {
+    return Tile.Builder()
+            .withLeftSegment()
+            .withTopSegment()
+            .withRightSegment()
+            .withBottomSegment()
+            .withCharToPrint(charToPrint)
+            .build()
+}
