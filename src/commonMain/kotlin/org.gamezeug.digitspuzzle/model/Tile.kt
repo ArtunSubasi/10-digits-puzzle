@@ -21,10 +21,8 @@ const val bottomSegmentOnlyMask = 0b0001
  * 3. bit - right
  * 4. bit - bottom
  */
-data class Tile(
-        val segmentMask: Int,
-        val charToPrint: Char
-) {
+data class Tile(val segmentMask: Int, val charToPrint: Char) {
+
     fun hasLeftSegment() = segmentMask and leftSegmentOnlyMask == leftSegmentOnlyMask
     fun hasTopSegment() = segmentMask and topSegmentOnlyMask == topSegmentOnlyMask
     fun hasRightSegment() = segmentMask and rightSegmentOnlyMask == rightSegmentOnlyMask
