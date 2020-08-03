@@ -1,5 +1,10 @@
 package org.gamezeug.digitspuzzle.model
 
+const val leftSegmentOnlyMask   = 0b1000
+const val topSegmentOnlyMask    = 0b0100
+const val rightSegmentOnlyMask  = 0b0010
+const val bottomSegmentOnlyMask = 0b0001
+
 /**
  * Represents a tile of the puzzle board. Each tile itself is divided into 4 segments (left, top, right, bottom)
  * which may be occupied separately.
@@ -17,21 +22,16 @@ package org.gamezeug.digitspuzzle.model
  * 4. bit - bottom
  */
 data class Tile(
-        private val segmentOccupationMask: Int = 0,
-        private val charToPrint: Char = 'X'
+        val segmentMask: Int,
+        val charToPrint: Char
 ) {
-    private val leftSegmentOnlyMask    = 0b1000
-    private val topSegmentOnlyMask     = 0b0100
-    private val rightSegmentOnlyMask   = 0b0010
-    private val bottomSegmentOnlyMask  = 0b0001
-
-    fun hasLeftSegment() = segmentOccupationMask and leftSegmentOnlyMask == leftSegmentOnlyMask
-    fun hasTopSegment() = segmentOccupationMask and topSegmentOnlyMask == topSegmentOnlyMask
-    fun hasRightSegment() = segmentOccupationMask and rightSegmentOnlyMask == rightSegmentOnlyMask
-    fun hasBottomSegment() = segmentOccupationMask and bottomSegmentOnlyMask == bottomSegmentOnlyMask
+    fun hasLeftSegment() = segmentMask and leftSegmentOnlyMask == leftSegmentOnlyMask
+    fun hasTopSegment() = segmentMask and topSegmentOnlyMask == topSegmentOnlyMask
+    fun hasRightSegment() = segmentMask and rightSegmentOnlyMask == rightSegmentOnlyMask
+    fun hasBottomSegment() = segmentMask and bottomSegmentOnlyMask == bottomSegmentOnlyMask
 
     fun isDisjoint(other: Tile): Boolean {
-        return (this.segmentOccupationMask and other.segmentOccupationMask) == 0
+        return (this.segmentMask and other.segmentMask) == 0
     }
 
     override fun toString(): String {
@@ -48,4 +48,33 @@ data class Tile(
 
     private fun getMark(hasSegment: Boolean) = if (hasSegment) charToPrint else ' '
 
+    class Builder(
+            private var segmentMask: Int = 0,
+            private var charToPrint: Char = 'X'
+    ) {
+        fun build() = Tile(segmentMask, charToPrint)
+        fun withLeftSegment(): Builder {
+            segmentMask = (segmentMask or leftSegmentOnlyMask)
+            return this
+        }
+        fun withRightSegment(): Builder {
+            segmentMask = (segmentMask or rightSegmentOnlyMask)
+            return this
+        }
+        fun withTopSegment(): Builder {
+            segmentMask = (segmentMask or topSegmentOnlyMask)
+            return this
+        }
+        fun withBottomSegment(): Builder {
+            segmentMask = (segmentMask or bottomSegmentOnlyMask)
+            return this
+        }
+        fun withCharToPrint(charToPrint: Char): Builder {
+            this.charToPrint = charToPrint
+            return this
+        }
+    }
 }
+
+fun emptyTile() = Tile.Builder().build()
+fun fullTile() = Tile.Builder().withLeftSegment().withTopSegment().withRightSegment().withBottomSegment().build()

@@ -1,5 +1,6 @@
 package org.gamezeug.digitspuzzle.model
 
+import com.soywiz.krypto.fillRandomBytes
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -9,33 +10,32 @@ class TileTest {
 
     @Test
     fun `hasSegments - empty tile`() {
-        val tile = Tile(0b0000)
-        assertFalse(tile.hasLeftSegment())
+        assertFalse(emptyTile().hasLeftSegment())
+        assertFalse(emptyTile().hasTopSegment())
+        assertFalse(emptyTile().hasRightSegment())
+        assertFalse(emptyTile().hasBottomSegment())
+    }
+
+    @Test
+    fun `hasSegments - full tile`() {
+        assertTrue(fullTile().hasLeftSegment())
+        assertTrue(fullTile().hasTopSegment())
+        assertTrue(fullTile().hasRightSegment())
+        assertTrue(fullTile().hasBottomSegment())
+    }
+
+    @Test
+    fun `hasSegments - left segment only`() {
+        val tile = Tile.Builder().withLeftSegment().build()
+        assertTrue(tile.hasLeftSegment())
         assertFalse(tile.hasTopSegment())
         assertFalse(tile.hasRightSegment())
         assertFalse(tile.hasBottomSegment())
     }
 
     @Test
-    fun `hasSegments - full tile`() {
-        val tile = Tile(0b1111)
-        assertTrue(tile.hasLeftSegment())
-        assertTrue(tile.hasTopSegment())
-        assertTrue(tile.hasRightSegment())
-        assertTrue(tile.hasBottomSegment())
-    }
-
-    @Test
-    fun `hasSegments - left segment only`() {
-        val tile = Tile(0b1000)
-        assertTrue(tile.hasLeftSegment())
-        assertFalse(tile.hasTopSegment())
-        assertFalse(tile.hasRightSegment())
-    }
-
-    @Test
     fun `hasSegments - top segment only`() {
-        val tile = Tile(0b0100)
+        val tile = Tile.Builder().withTopSegment().build()
         assertFalse(tile.hasLeftSegment())
         assertTrue(tile.hasTopSegment())
         assertFalse(tile.hasRightSegment())
@@ -44,7 +44,7 @@ class TileTest {
 
     @Test
     fun `hasSegments - right segment only`() {
-        val tile = Tile(0b0010)
+        val tile = Tile.Builder().withRightSegment().build()
         assertFalse(tile.hasLeftSegment())
         assertFalse(tile.hasTopSegment())
         assertTrue(tile.hasRightSegment())
@@ -53,7 +53,7 @@ class TileTest {
 
     @Test
     fun `hasSegments - bottom segment only`() {
-        val tile = Tile(0b0001)
+        val tile = Tile.Builder().withBottomSegment().build()
         assertFalse(tile.hasLeftSegment())
         assertFalse(tile.hasTopSegment())
         assertFalse(tile.hasRightSegment())
@@ -62,57 +62,64 @@ class TileTest {
 
     @Test
     fun `isDisjoint - both empty`() {
-        assertTrue(Tile().isDisjoint(Tile()))
+        assertTrue(emptyTile().isDisjoint(emptyTile()))
     }
 
     @Test
     fun `isDisjoint - empty and full`() {
-        assertTrue(Tile().isDisjoint(Tile(0b1111)))
+        assertTrue(emptyTile().isDisjoint(fullTile()))
     }
 
     @Test
     fun `isDisjoint - fifty fifty edge case`() {
-        val tileWithTopAndRightSegments = Tile(0b0110)
-        val tileWithBottomAndLeftSegments = Tile(0b1001)
+        val tileWithTopAndRightSegments = Tile.Builder().withTopSegment().withRightSegment().build()
+        val tileWithBottomAndLeftSegments = Tile.Builder().withBottomSegment().withLeftSegment().build()
         assertTrue(tileWithTopAndRightSegments.isDisjoint(tileWithBottomAndLeftSegments))
     }
 
     @Test
     fun `isDisjoint - both full`() {
-        assertFalse(Tile(0b1111).isDisjoint(Tile(0b1111)))
+        assertFalse(fullTile().isDisjoint(fullTile()))
     }
 
     @Test
     fun `toString with empty tile`() {
-        val tile = Tile(0b0000)
         val expected = """
             [   ]
             [   ]
             [   ]
         """.trimIndent()
-        assertEquals(expected, tile.toString())
+        assertEquals(expected, emptyTile().toString())
     }
 
     @Test
     fun `toString with full tile`() {
-        val tile = Tile(0b1111)
         val expected = """
             [ X ]
             [X X]
             [ X ]
         """.trimIndent()
-        assertEquals(expected, tile.toString())
+        assertEquals(expected, fullTile().toString())
     }
 
     @Test
     fun `toString with top and right segments only`() {
-        val tile = Tile(0b0110)
         val expected = """
             [ X ]
             [  X]
             [   ]
         """.trimIndent()
-        assertEquals(expected, tile.toString())
+        assertEquals(expected, Tile.Builder().withTopSegment().withRightSegment().build().toString())
+    }
+
+    @Test
+    fun `toString with bottom segment only with a custom char to print`() {
+        val expected = """
+            [   ]
+            [   ]
+            [ 2 ]
+        """.trimIndent()
+        assertEquals(expected, Tile.Builder().withBottomSegment().withCharToPrint('2').build().toString())
     }
 
 }
