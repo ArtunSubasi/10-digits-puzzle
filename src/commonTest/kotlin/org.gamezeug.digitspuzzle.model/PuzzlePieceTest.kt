@@ -57,4 +57,27 @@ class PuzzlePieceTest {
         assertEquals(expected, puzzlePiece.toString())
     }
 
+    @Test
+    fun buildFromFile() {
+        val testPiece = PuzzlePieceFactory().buildFromFile('2', "testPiece.csv")
+        val expected = """
+            [ 2 ][   ]
+            [2 2][   ]
+            [ 2 ][   ]
+            [   ][   ]
+            [2  ][  2]
+            [   ][   ]
+            [   ][ 2 ]
+            [   ][   ]
+            [ 2 ][   ]
+            [   ][ 2 ]
+            [2 2][   ]
+            [   ][ 2 ]
+            [   ][   ]
+            [   ][2 2]
+            [   ][ 2 ]
+        """.trimIndent()
+        assertEquals(expected, testPiece.toString())
+    }
+
 }
