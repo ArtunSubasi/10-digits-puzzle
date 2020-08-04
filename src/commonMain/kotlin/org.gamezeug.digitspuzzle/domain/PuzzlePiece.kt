@@ -14,37 +14,11 @@ class PuzzlePiece(val name: String, private val area: PuzzleArea) {
  * XXXX,XXXX,XXXX
  * X := "F" | "T" | "B" | "L" | "R" | " "
  */
-class PuzzlePieceFactory {
+object PuzzlePieceFactory {
 
-    fun build1(): PuzzlePiece {
-        val row1 = PuzzleRow(arrayOf(Tile.Builder().withBottomSegment().build()))
-        val row2 = PuzzleRow(arrayOf(fullTile()))
-        val row3 = PuzzleRow(arrayOf(Tile.Builder().withTopSegment().withBottomSegment().withLeftSegment().build()))
-        val row4 = PuzzleRow(arrayOf(fullTile()))
-        val row5 = PuzzleRow(arrayOf(Tile.Builder().withTopSegment().build()))
-        return PuzzlePiece("1", PuzzleArea(arrayOf(row1, row2, row3, row4, row5)))
-    }
-    fun build2(): PuzzlePiece {
-        val char = '2'
-        val row1 = PuzzleRow(arrayOf(
-                Tile.Builder().withRightSegment().withCharToPrint(char).build(),
-                fullTile(char),
-                Tile.Builder().withLeftSegment().withBottomSegment().withCharToPrint(char).build()
-        ))
-        val row2 = PuzzleRow(arrayOf(emptyTile(char), emptyTile(char), fullTile(char)))
-        val row3 = PuzzleRow(arrayOf(
-                Tile.Builder().withBottomSegment().withRightSegment().withCharToPrint(char).build(),
-                fullTile(char),
-                Tile.Builder().withLeftSegment().withTopSegment().withCharToPrint(char).build()
-        ))
-        val row4 = PuzzleRow(arrayOf(fullTile(char), emptyTile(char), emptyTile(char)))
-        val row5 = PuzzleRow(arrayOf(
-                Tile.Builder().withTopSegment().withRightSegment().withCharToPrint(char).build(),
-                fullTile(char),
-                Tile.Builder().withLeftSegment().withCharToPrint(char).build()
-        ))
-        return PuzzlePiece(char.toString(), PuzzleArea(arrayOf(row1, row2, row3, row4, row5)))
-    }
+    fun build1(): PuzzlePiece = buildDigit('1')
+    fun build2(): PuzzlePiece = buildDigit('2')
+    private fun buildDigit(digitChar: Char) = buildFromFile(digitChar, "puzzlePieces/$digitChar.csv")
 
     fun buildFromFile(charToPrint: Char, filePath: String): PuzzlePiece {
         val file = resourcesVfs[filePath]
@@ -54,21 +28,12 @@ class PuzzlePieceFactory {
         }
         val rows = mutableListOf<PuzzleRow>()
         for (line in lines) {
-            val tiles = line.split(",").map { mapToTile(it, charToPrint) }.toTypedArray()
+            val tiles = line.split(",")
+                    .map { TileFactory.createFromTileDescription(it, charToPrint) }
+                    .toTypedArray()
             rows.add(PuzzleRow(tiles))
         }
         return PuzzlePiece(charToPrint.toString(), PuzzleArea(rows.toTypedArray()))
-    }
-
-    private fun mapToTile(tileDescription: String, charToPrint: Char): Tile {
-        if (tileDescription.contains("F")) return fullTile(charToPrint)
-        var builder = Tile.Builder()
-        builder = builder.withCharToPrint(charToPrint)
-        if (tileDescription.contains("L")) builder = builder.withLeftSegment()
-        if (tileDescription.contains("T")) builder = builder.withTopSegment()
-        if (tileDescription.contains("R")) builder = builder.withRightSegment()
-        if (tileDescription.contains("B")) builder = builder.withBottomSegment()
-        return builder.build()
     }
 
 }

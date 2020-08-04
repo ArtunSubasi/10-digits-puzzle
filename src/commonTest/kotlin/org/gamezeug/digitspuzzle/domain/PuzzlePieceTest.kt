@@ -10,22 +10,22 @@ class PuzzlePieceTest {
         val expected = """
             [   ]
             [   ]
-            [ X ]
-            [ X ]
-            [X X]
-            [ X ]
-            [ X ]
-            [X  ]
-            [ X ]
-            [ X ]
-            [X X]
-            [ X ]
-            [ X ]
+            [ 1 ]
+            [ 1 ]
+            [1 1]
+            [ 1 ]
+            [ 1 ]
+            [1  ]
+            [ 1 ]
+            [ 1 ]
+            [1 1]
+            [ 1 ]
+            [ 1 ]
             [   ]
             [   ]
         """.trimIndent()
 
-        val puzzlePiece = PuzzlePieceFactory().build1()
+        val puzzlePiece = PuzzlePieceFactory.build1()
 
         assertEquals("1", puzzlePiece.name)
         assertEquals(expected, puzzlePiece.toString())
@@ -51,7 +51,7 @@ class PuzzlePieceTest {
             [   ][ 2 ][   ]
         """.trimIndent()
 
-        val puzzlePiece = PuzzlePieceFactory().build2()
+        val puzzlePiece = PuzzlePieceFactory.build2()
 
         assertEquals("2", puzzlePiece.name)
         assertEquals(expected, puzzlePiece.toString())
@@ -59,7 +59,7 @@ class PuzzlePieceTest {
 
     @Test
     fun buildFromFile() {
-        val testPiece = PuzzlePieceFactory().buildFromFile('2', "testPiece.csv")
+        val testPiece = PuzzlePieceFactory.buildFromFile('2', "testPiece.csv")
         val expected = """
             [ 2 ][   ]
             [2 2][   ]

@@ -12,7 +12,7 @@ class PuzzleBoardTest {
             [   ]
             [   ]
         """.trimIndent()
-        assertEquals(expected, PuzzleBoardFactory().buildPuzzleBoard(1, 1).toString())
+        assertEquals(expected, PuzzleBoardFactory.buildPuzzleBoard(1, 1).toString())
     }
 
     @Test
@@ -28,7 +28,7 @@ class PuzzleBoardTest {
             [   ][   ][   ]
         """.trimIndent()
 
-        val puzzleBoard = PuzzleBoardFactory().buildPuzzleBoard(numberOfRows, numberOfColumns)
+        val puzzleBoard = PuzzleBoardFactory.buildPuzzleBoard(numberOfRows, numberOfColumns)
 
         assertEquals(expected, puzzleBoard.toString())
     }
@@ -46,7 +46,7 @@ class PuzzleBoardTest {
             [ X ][ X ]
         """.trimIndent()
 
-        val puzzleBoard = PuzzleBoardFactory().buildPuzzleBoardWithEdges(numberOfRows, numberOfColumns)
+        val puzzleBoard = PuzzleBoardFactory.buildPuzzleBoardWithEdges(numberOfRows, numberOfColumns)
 
         assertEquals(expected, puzzleBoard.toString())
     }

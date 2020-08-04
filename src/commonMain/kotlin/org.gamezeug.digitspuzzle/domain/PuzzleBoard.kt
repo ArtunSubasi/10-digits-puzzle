@@ -7,7 +7,7 @@ class PuzzleBoard(private val area: PuzzleArea) {
     override fun toString() = area.toString()
 }
 
-class PuzzleBoardFactory {
+object PuzzleBoardFactory {
     fun buildPuzzleBoard(numberOfRows: Int, numberOfColumns: Int): PuzzleBoard {
         val puzzleArea = PuzzleArea(Array(numberOfRows) { _ -> buildPuzzleRow(numberOfColumns) })
         return PuzzleBoard(puzzleArea)

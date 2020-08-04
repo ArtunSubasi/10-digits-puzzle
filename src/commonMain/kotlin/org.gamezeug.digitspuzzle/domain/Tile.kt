@@ -82,6 +82,19 @@ data class Tile(val segmentMask: Int, val charToPrint: Char) {
     }
 }
 
+object TileFactory {
+    fun createFromTileDescription(tileDescription: String, charToPrint: Char): Tile {
+        if (tileDescription.contains("F")) return fullTile(charToPrint)
+        var builder = Tile.Builder()
+        builder = builder.withCharToPrint(charToPrint)
+        if (tileDescription.contains("L")) builder = builder.withLeftSegment()
+        if (tileDescription.contains("T")) builder = builder.withTopSegment()
+        if (tileDescription.contains("R")) builder = builder.withRightSegment()
+        if (tileDescription.contains("B")) builder = builder.withBottomSegment()
+        return builder.build()
+    }
+}
+
 fun emptyTile(charToPrint: Char = 'X') = Tile.Builder().withCharToPrint(charToPrint).build()
 
 fun fullTile(charToPrint: Char = 'X'): Tile {
