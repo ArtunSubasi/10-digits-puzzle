@@ -1,4 +1,4 @@
-package org.gamezeug.digitspuzzle.model
+package org.gamezeug.digitspuzzle.domain
 
 const val leftSegmentOnlyMask   = 0b1000
 const val topSegmentOnlyMask    = 0b0100

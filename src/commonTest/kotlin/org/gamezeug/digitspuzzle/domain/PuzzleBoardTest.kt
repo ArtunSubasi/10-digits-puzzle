@@ -1,4 +1,4 @@
-package org.gamezeug.digitspuzzle.model
+package org.gamezeug.digitspuzzle.domain
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

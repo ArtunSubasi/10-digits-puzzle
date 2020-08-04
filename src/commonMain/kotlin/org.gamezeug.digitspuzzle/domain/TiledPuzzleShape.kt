@@ -1,4 +1,4 @@
-package org.gamezeug.digitspuzzle.model
+package org.gamezeug.digitspuzzle.domain
 
 open class TiledPuzzleShape(private val rows: Array<PuzzleRow>) {
     val numberOfRows = rows.size

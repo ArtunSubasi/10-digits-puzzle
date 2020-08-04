@@ -1,4 +1,4 @@
-package org.gamezeug.digitspuzzle.model
+package org.gamezeug.digitspuzzle.domain
 
 import com.soywiz.korio.async.async
 import com.soywiz.korio.async.runBlockingNoSuspensions

@@ -1,4 +1,4 @@
-package org.gamezeug.digitspuzzle.model
+package org.gamezeug.digitspuzzle.domain
 
 class PuzzleBoard(private val rows: Array<PuzzleRow>): TiledPuzzleShape(rows) {
     fun putTile(x: Int, y: Int, newTile: Tile) {
