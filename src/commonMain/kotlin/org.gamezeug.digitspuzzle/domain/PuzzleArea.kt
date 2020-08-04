@@ -1,6 +1,9 @@
 package org.gamezeug.digitspuzzle.domain
 
-open class TiledPuzzleShape(private val rows: Array<PuzzleRow>) {
+/**
+ * Represents a tiled area consisting of rows and columns.
+ */
+open class PuzzleArea(val rows: Array<PuzzleRow>) {
     val numberOfRows = rows.size
     val numberOfColumns = rows[0].size
 

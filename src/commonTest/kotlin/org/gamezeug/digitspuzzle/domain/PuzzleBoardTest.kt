@@ -30,8 +30,6 @@ class PuzzleBoardTest {
 
         val puzzleBoard = PuzzleBoardFactory().buildPuzzleBoard(numberOfRows, numberOfColumns)
 
-        assertEquals(numberOfRows, puzzleBoard.numberOfRows)
-        assertEquals(numberOfColumns, puzzleBoard.numberOfColumns)
         assertEquals(expected, puzzleBoard.toString())
     }
 

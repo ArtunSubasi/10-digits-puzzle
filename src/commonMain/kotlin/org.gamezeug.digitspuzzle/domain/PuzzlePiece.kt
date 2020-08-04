@@ -5,7 +5,9 @@ import com.soywiz.korio.async.runBlockingNoSuspensions
 import com.soywiz.korio.file.std.resourcesVfs
 import kotlinx.coroutines.GlobalScope
 
-class PuzzlePiece(val name: String, private val rows: Array<PuzzleRow>): TiledPuzzleShape(rows)
+class PuzzlePiece(val name: String, private val area: PuzzleArea) {
+    override fun toString() = area.toString()
+}
 
 /**
  * Reads and constructs PuzzlePieces from CSV in format such as:
@@ -20,7 +22,7 @@ class PuzzlePieceFactory {
         val row3 = PuzzleRow(arrayOf(Tile.Builder().withTopSegment().withBottomSegment().withLeftSegment().build()))
         val row4 = PuzzleRow(arrayOf(fullTile()))
         val row5 = PuzzleRow(arrayOf(Tile.Builder().withTopSegment().build()))
-        return PuzzlePiece("1", arrayOf(row1, row2, row3, row4, row5))
+        return PuzzlePiece("1", PuzzleArea(arrayOf(row1, row2, row3, row4, row5)))
     }
     fun build2(): PuzzlePiece {
         val char = '2'
@@ -41,7 +43,7 @@ class PuzzlePieceFactory {
                 fullTile(char),
                 Tile.Builder().withLeftSegment().withCharToPrint(char).build()
         ))
-        return PuzzlePiece(char.toString(), arrayOf(row1, row2, row3, row4, row5))
+        return PuzzlePiece(char.toString(), PuzzleArea(arrayOf(row1, row2, row3, row4, row5)))
     }
 
     fun buildFromFile(charToPrint: Char, filePath: String): PuzzlePiece {
@@ -55,7 +57,7 @@ class PuzzlePieceFactory {
             val tiles = line.split(",").map { mapToTile(it, charToPrint) }.toTypedArray()
             rows.add(PuzzleRow(tiles))
         }
-        return PuzzlePiece(charToPrint.toString(), rows.toTypedArray())
+        return PuzzlePiece(charToPrint.toString(), PuzzleArea(rows.toTypedArray()))
     }
 
     private fun mapToTile(tileDescription: String, charToPrint: Char): Tile {

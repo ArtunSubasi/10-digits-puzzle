@@ -1,14 +1,16 @@
 package org.gamezeug.digitspuzzle.domain
 
-class PuzzleBoard(private val rows: Array<PuzzleRow>): TiledPuzzleShape(rows) {
+class PuzzleBoard(private val area: PuzzleArea) {
     fun putTile(x: Int, y: Int, newTile: Tile) {
-        rows[y].tiles[x] = newTile
+        area.rows[y].tiles[x] = newTile
     }
+    override fun toString() = area.toString()
 }
 
 class PuzzleBoardFactory {
     fun buildPuzzleBoard(numberOfRows: Int, numberOfColumns: Int): PuzzleBoard {
-        return PuzzleBoard(Array(numberOfRows) { _ -> buildPuzzleRow(numberOfColumns)})
+        val puzzleArea = PuzzleArea(Array(numberOfRows) { _ -> buildPuzzleRow(numberOfColumns) })
+        return PuzzleBoard(puzzleArea)
     }
     fun buildPuzzleBoardWithEdges(numberOfRows: Int, numberOfColumns: Int): PuzzleBoard {
         val puzzleBoard = buildPuzzleBoard(numberOfRows, numberOfColumns)
