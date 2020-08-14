@@ -3,7 +3,7 @@ package org.gamezeug.digitspuzzle.domain
 /**
  * Represents a tiled area consisting of rows and columns.
  */
-open class PuzzleArea(val rows: Array<PuzzleRow>) {
+class PuzzleArea(val rows: List<PuzzleRow>) {
     val numberOfRows = rows.size
     val numberOfColumns = rows[0].size
 
@@ -29,6 +29,6 @@ open class PuzzleArea(val rows: Array<PuzzleRow>) {
     }
 }
 
-class PuzzleRow(val tiles: Array<Tile>) {
+class PuzzleRow(val tiles: List<Tile>) {
     val size = tiles.size
 }

@@ -30,10 +30,10 @@ object PuzzlePieceFactory {
         for (line in lines) {
             val tiles = line.split(",")
                     .map { TileFactory.createFromTileDescription(it, charToPrint) }
-                    .toTypedArray()
+                    .toList()
             rows.add(PuzzleRow(tiles))
         }
-        return PuzzlePiece(charToPrint.toString(), PuzzleArea(rows.toTypedArray()))
+        return PuzzlePiece(charToPrint.toString(), PuzzleArea(rows))
     }
 
 }
