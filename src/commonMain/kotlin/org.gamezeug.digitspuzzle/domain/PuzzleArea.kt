@@ -1,15 +1,15 @@
 package org.gamezeug.digitspuzzle.domain
 
 /**
- * Represents a tiled area consisting of rows and columns.
+ * An immutable tiled area consisting of rows and columns.
  */
-class PuzzleArea(val rows: List<PuzzleRow>) {
-    val numberOfRows = rows.size
-    val numberOfColumns = rows[0].size
+class PuzzleArea(private val rows: List<PuzzleRow>) {
+    private val numberOfRows = rows.size
+    private val numberOfColumns = rows[0].size
 
     fun replaceTiles(vararg replacements: TileReplacement): PuzzleArea {
         val mutableArea = MutableList(numberOfRows) { y -> MutableList(numberOfColumns) { x -> rows[y].tiles[x] } }
-        replacements.forEach { mutableArea[it.coordinate.y][it.coordinate.y] = it.newTile }
+        replacements.forEach { mutableArea[it.coordinate.y][it.coordinate.x] = it.newTile }
         return PuzzleArea(mutableArea.map { PuzzleRow(it) })
     }
 
@@ -41,6 +41,19 @@ object PuzzleAreaFactory {
         val puzzleRows = MutableList(numberOfRows) { _ -> PuzzleRowFactory.buildPuzzleRow(numberOfColumns) }
         return PuzzleArea(puzzleRows)
     }
+    fun buildPuzzleAreaWithEdges(numberOfRows: Int, numberOfColumns: Int): PuzzleArea {
+        val emptyArea = buildPuzzleArea(numberOfRows, numberOfColumns)
+        return emptyArea.replaceTiles(
+                TileReplacement(PuzzleAreaCoordinate(0, 0), buildTopLeftTile()),
+                TileReplacement(PuzzleAreaCoordinate(numberOfColumns - 1, 0), buildTopRightTile()),
+                TileReplacement(PuzzleAreaCoordinate(0, numberOfRows - 1), buildBottomLeftTile()),
+                TileReplacement(PuzzleAreaCoordinate(numberOfColumns - 1, numberOfRows - 1), buildBottomRightTile())
+        )
+    }
+    private fun buildTopLeftTile() = Tile.Builder().withTopSegment().withLeftSegment().build()
+    private fun buildTopRightTile() = Tile.Builder().withTopSegment().withRightSegment().build()
+    private fun buildBottomLeftTile() = Tile.Builder().withBottomSegment().withLeftSegment().build()
+    private fun buildBottomRightTile() = Tile.Builder().withBottomSegment().withRightSegment().build()
 }
 
 data class PuzzleAreaCoordinate(val x: Int, val y: Int)

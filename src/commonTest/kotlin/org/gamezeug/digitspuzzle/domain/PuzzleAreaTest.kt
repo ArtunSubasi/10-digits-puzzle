@@ -34,6 +34,24 @@ class PuzzleAreaTest {
     }
 
     @Test
+    fun `build puzzle area with edges`() {
+        val numberOfRows = 2
+        val numberOfColumns = 2
+        val expected = """
+            [ X ][ X ]
+            [X  ][  X]
+            [   ][   ]
+            [   ][   ]
+            [X  ][  X]
+            [ X ][ X ]
+        """.trimIndent()
+
+        val puzzleBoard = PuzzleAreaFactory.buildPuzzleAreaWithEdges(numberOfRows, numberOfColumns)
+
+        assertEquals(expected, puzzleBoard.toString())
+    }
+
+    @Test
     fun `replace tile of empty 1x1 area`() {
         val emptyArea = PuzzleAreaFactory.buildPuzzleArea(1, 1)
         val replacements = TileReplacement(PuzzleAreaCoordinate(0, 0), fullTile())
