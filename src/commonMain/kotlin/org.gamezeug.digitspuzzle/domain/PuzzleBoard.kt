@@ -5,10 +5,6 @@ class PuzzleBoard(private val area: PuzzleArea) {
 }
 
 object PuzzleBoardFactory {
-    fun buildPuzzleBoard(numberOfRows: Int, numberOfColumns: Int): PuzzleBoard {
-        val puzzleRows = MutableList(numberOfRows) { _ -> buildMutablePuzzleRow(numberOfColumns) }
-        return PuzzleBoard(PuzzleArea(puzzleRows.map { PuzzleRow(it) }))
-    }
     fun buildPuzzleBoardWithEdges(numberOfRows: Int, numberOfColumns: Int): PuzzleBoard {
         val puzzleRows = MutableList(numberOfRows) { _ -> buildMutablePuzzleRow(numberOfColumns) }
         puzzleRows[0][0] = buildTopLeftTile()
