@@ -4,8 +4,8 @@ package org.gamezeug.digitspuzzle.domain
  * An immutable tiled area consisting of rows and columns.
  */
 class PuzzleArea(private val rows: List<PuzzleRow>) {
-    private val numberOfRows = rows.size
-    private val numberOfColumns = rows[0].size
+    val numberOfRows = rows.size
+    val numberOfColumns = rows[0].size
 
     fun replaceTiles(vararg replacements: TileReplacement): PuzzleArea {
         val mutableArea = MutableList(numberOfRows) { y -> MutableList(numberOfColumns) { x -> rows[y].tiles[x] } }
