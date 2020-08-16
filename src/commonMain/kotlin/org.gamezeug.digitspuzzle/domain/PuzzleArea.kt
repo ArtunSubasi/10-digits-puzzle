@@ -3,7 +3,7 @@ package org.gamezeug.digitspuzzle.domain
 /**
  * An immutable tiled area consisting of rows and columns.
  */
-class PuzzleArea(private val rows: List<PuzzleRow>) {
+class PuzzleArea(val rows: List<PuzzleRow>) {
     val numberOfRows = rows.size
     val numberOfColumns = rows[0].size
 
@@ -11,6 +11,16 @@ class PuzzleArea(private val rows: List<PuzzleRow>) {
         val mutableArea = MutableList(numberOfRows) { y -> MutableList(numberOfColumns) { x -> rows[y].tiles[x] } }
         replacements.forEach { mutableArea[it.coordinate.y][it.coordinate.x] = it.newTile }
         return PuzzleArea(mutableArea.map { PuzzleRow(it) })
+    }
+
+    fun getTile(x: Int, y: Int): Tile {
+        return rows[y].tiles[x]
+    }
+
+    fun hasRoomFor(newArea: PuzzleArea, newAreaCoordinate: PuzzleAreaCoordinate): Boolean {
+        val wideEnough = this.numberOfColumns >= (newArea.numberOfColumns + newAreaCoordinate.x)
+        val tallEnough = this.numberOfRows >= (newArea.numberOfRows + newAreaCoordinate.y)
+        return wideEnough && tallEnough
     }
 
     override fun toString(): String {

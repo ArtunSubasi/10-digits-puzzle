@@ -5,7 +5,7 @@ import com.soywiz.korio.async.runBlockingNoSuspensions
 import com.soywiz.korio.file.std.resourcesVfs
 import kotlinx.coroutines.GlobalScope
 
-class PuzzlePiece(val name: String, private val area: PuzzleArea) {
+class PuzzlePiece(val name: String, val area: PuzzleArea) {
     override fun toString() = area.toString()
 }
 

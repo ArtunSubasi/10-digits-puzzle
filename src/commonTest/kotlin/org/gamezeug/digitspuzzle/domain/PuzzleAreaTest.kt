@@ -2,6 +2,8 @@ package org.gamezeug.digitspuzzle.domain
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class PuzzleAreaTest {
 
@@ -85,6 +87,33 @@ class PuzzleAreaTest {
             [   ][   ][   ]
         """.trimIndent()
         assertEquals(expected, newArea.toString())
+    }
+
+    @Test
+    fun `has 1x1 area room for 1x1`() {
+        val area = PuzzleAreaFactory.buildPuzzleArea(1, 1)
+        assertTrue(area.hasRoomFor(area, PuzzleAreaCoordinate(0, 0)))
+    }
+
+    @Test
+    fun `has 1x1 area room for 1x2`() {
+        val containerArea = PuzzleAreaFactory.buildPuzzleArea(1, 1)
+        val newArea = PuzzleAreaFactory.buildPuzzleArea(1, 2)
+        assertFalse(containerArea.hasRoomFor(newArea, PuzzleAreaCoordinate(0, 0)))
+    }
+
+    @Test
+    fun `has 1x1 area room for 2x1`() {
+        val containerArea = PuzzleAreaFactory.buildPuzzleArea(1, 1)
+        val newArea = PuzzleAreaFactory.buildPuzzleArea(2, 1)
+        assertFalse(containerArea.hasRoomFor(newArea, PuzzleAreaCoordinate(0, 0)))
+    }
+
+    @Test
+    fun `has 2x2 area room for 1x2 with 1 y-offset`() {
+        val containerArea = PuzzleAreaFactory.buildPuzzleArea(2, 2)
+        val newArea = PuzzleAreaFactory.buildPuzzleArea(1, 2)
+        assertTrue(containerArea.hasRoomFor(newArea, PuzzleAreaCoordinate(0, 1)))
     }
 
 }
