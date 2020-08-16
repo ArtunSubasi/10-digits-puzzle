@@ -8,58 +8,6 @@ import kotlin.test.assertTrue
 class TileTest {
 
     @Test
-    fun `hasSegments - empty tile`() {
-        assertFalse(emptyTile().hasLeftSegment())
-        assertFalse(emptyTile().hasTopSegment())
-        assertFalse(emptyTile().hasRightSegment())
-        assertFalse(emptyTile().hasBottomSegment())
-    }
-
-    @Test
-    fun `hasSegments - full tile`() {
-        assertTrue(fullTile().hasLeftSegment())
-        assertTrue(fullTile().hasTopSegment())
-        assertTrue(fullTile().hasRightSegment())
-        assertTrue(fullTile().hasBottomSegment())
-    }
-
-    @Test
-    fun `hasSegments - left segment only`() {
-        val tile = Tile.Builder().withLeftSegment().build()
-        assertTrue(tile.hasLeftSegment())
-        assertFalse(tile.hasTopSegment())
-        assertFalse(tile.hasRightSegment())
-        assertFalse(tile.hasBottomSegment())
-    }
-
-    @Test
-    fun `hasSegments - top segment only`() {
-        val tile = Tile.Builder().withTopSegment().build()
-        assertFalse(tile.hasLeftSegment())
-        assertTrue(tile.hasTopSegment())
-        assertFalse(tile.hasRightSegment())
-        assertFalse(tile.hasBottomSegment())
-    }
-
-    @Test
-    fun `hasSegments - right segment only`() {
-        val tile = Tile.Builder().withRightSegment().build()
-        assertFalse(tile.hasLeftSegment())
-        assertFalse(tile.hasTopSegment())
-        assertTrue(tile.hasRightSegment())
-        assertFalse(tile.hasBottomSegment())
-    }
-
-    @Test
-    fun `hasSegments - bottom segment only`() {
-        val tile = Tile.Builder().withBottomSegment().build()
-        assertFalse(tile.hasLeftSegment())
-        assertFalse(tile.hasTopSegment())
-        assertFalse(tile.hasRightSegment())
-        assertTrue(tile.hasBottomSegment())
-    }
-
-    @Test
     fun `isDisjoint - both empty`() {
         assertTrue(emptyTile().isDisjoint(emptyTile()))
     }
@@ -71,8 +19,8 @@ class TileTest {
 
     @Test
     fun `isDisjoint - fifty fifty edge case`() {
-        val tileWithTopAndRightSegments = Tile.Builder().withTopSegment().withRightSegment().build()
-        val tileWithBottomAndLeftSegments = Tile.Builder().withBottomSegment().withLeftSegment().build()
+        val tileWithTopAndRightSegments = Tile(topSegment = 'X', rightSegment = 'X')
+        val tileWithBottomAndLeftSegments = Tile(bottomSegment = 'X', leftSegment = 'X')
         assertTrue(tileWithTopAndRightSegments.isDisjoint(tileWithBottomAndLeftSegments))
     }
 
@@ -108,7 +56,7 @@ class TileTest {
             [  X]
             [   ]
         """.trimIndent()
-        assertEquals(expected, Tile.Builder().withTopSegment().withRightSegment().build().toString())
+        assertEquals(expected, Tile(topSegment = 'X', rightSegment = 'X').toString())
     }
 
     @Test
@@ -118,7 +66,7 @@ class TileTest {
             [   ]
             [ 2 ]
         """.trimIndent()
-        assertEquals(expected, Tile.Builder().withBottomSegment().withCharToPrint('2').build().toString())
+        assertEquals(expected, Tile(bottomSegment = '2').toString())
     }
 
     @Test

@@ -1,7 +1,6 @@
 package org.gamezeug.digitspuzzle.application
 
-import org.gamezeug.digitspuzzle.domain.Move
-import org.gamezeug.digitspuzzle.domain.PuzzleState
+import org.gamezeug.digitspuzzle.domain.*
 
 class PiecePlacementUseCase {
 
@@ -14,6 +13,20 @@ class PiecePlacementUseCase {
             }
         }
         return true
+    }
+
+    fun placePiece(move: Move, state: PuzzleState) {
+        if (!isValidPiecePlacement(move, state)) {
+            TODO("exception handling, use isValidPiecePlacement? move it to another class for testability? do it somewhere else?")
+        }
+        for ((rowIndex, row) in move.piece.area.rows.withIndex()) {
+            for ((colIndex, newTile) in row.tiles.withIndex()) {
+                val tileInThePuzzle = state.area.getTile(colIndex + move.coordinate.x, rowIndex + move.coordinate.y)
+                val mergedTile = tileInThePuzzle.merge(newTile)
+                val coordinate = PuzzleAreaCoordinate(colIndex + move.coordinate.x, rowIndex + move.coordinate.y)
+                state.area = state.area.replaceTiles(TileReplacement(coordinate, mergedTile))
+            }
+        }
     }
 
 }

@@ -9,7 +9,7 @@ import kotlin.test.assertTrue
 class PiecePlacementUseCaseTest {
 
     @Test
-    fun `valid placement, empty area`() {
+    fun `isValidPiecePlacement, valid, empty area`() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(0, 0), piece)
@@ -24,7 +24,7 @@ class PiecePlacementUseCaseTest {
     }
 
     @Test
-    fun `invalid placement, tiles not disjunctive`() {
+    fun `isValidPiecePlacement, invalid, tiles not disjunctive`() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(0, 0), piece)
@@ -40,7 +40,7 @@ class PiecePlacementUseCaseTest {
     }
 
     @Test
-    fun `valid placement, tiles not disjunctive, x-offset`() {
+    fun `isValidPiecePlacement, valid, tiles not disjunctive, x-offset`() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(1, 0), piece)
@@ -53,6 +53,38 @@ class PiecePlacementUseCaseTest {
 
         // Then
         assertTrue(validPlacement)
+    }
+
+    @Test
+    fun `placePiece, valid, area with edges`() {
+        // Given
+        val piece = PuzzlePieceFactory.build1()
+        val move = Move(PuzzleAreaCoordinate(0, 0), piece)
+        val area = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 1)
+        val state = PuzzleState(area, mutableListOf(piece))
+
+        // When
+        PiecePlacementUseCase().placePiece(move, state)
+
+        // Then
+        val expected = """
+            [ X ]
+            [  X]
+            [ 1 ]
+            [ 1 ]
+            [1 1]
+            [ 1 ]
+            [ 1 ]
+            [1  ]
+            [ 1 ]
+            [ 1 ]
+            [1 1]
+            [ 1 ]
+            [ 1 ]
+            [  X]
+            [ X ]
+        """.trimIndent()
+        assertEquals(expected, state.area.toString())
     }
 
 }

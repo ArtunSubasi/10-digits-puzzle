@@ -45,7 +45,7 @@ class PuzzleArea(val rows: List<PuzzleRow>) {
     }
 }
 
-// TODO check if there is a better way to define factories, such as by using companion objects
+// TODO check if there is a better way to define factories, such as by using companion objects, or plain constuctors
 object PuzzleAreaFactory {
     fun buildPuzzleArea(numberOfRows: Int, numberOfColumns: Int): PuzzleArea {
         val puzzleRows = MutableList(numberOfRows) { _ -> PuzzleRowFactory.buildPuzzleRow(numberOfColumns) }
@@ -60,10 +60,10 @@ object PuzzleAreaFactory {
                 TileReplacement(PuzzleAreaCoordinate(numberOfColumns - 1, numberOfRows - 1), buildBottomRightTile())
         )
     }
-    private fun buildTopLeftTile() = Tile.Builder().withTopSegment().withLeftSegment().build()
-    private fun buildTopRightTile() = Tile.Builder().withTopSegment().withRightSegment().build()
-    private fun buildBottomLeftTile() = Tile.Builder().withBottomSegment().withLeftSegment().build()
-    private fun buildBottomRightTile() = Tile.Builder().withBottomSegment().withRightSegment().build()
+    private fun buildTopLeftTile() = Tile(topSegment = 'X', leftSegment = 'X')
+    private fun buildTopRightTile() = Tile(topSegment = 'X', rightSegment = 'X')
+    private fun buildBottomLeftTile() = Tile(bottomSegment = 'X', leftSegment = 'X')
+    private fun buildBottomRightTile() = Tile(bottomSegment = 'X', rightSegment = 'X')
 }
 
 data class PuzzleAreaCoordinate(val x: Int, val y: Int)

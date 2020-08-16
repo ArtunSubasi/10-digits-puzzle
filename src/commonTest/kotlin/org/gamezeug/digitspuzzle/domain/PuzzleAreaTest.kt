@@ -74,7 +74,7 @@ class PuzzleAreaTest {
         val numberOfColumns = 3
         val emptyArea = PuzzleAreaFactory.buildPuzzleArea(numberOfRows, numberOfColumns)
         val replacement1 = TileReplacement(PuzzleAreaCoordinate(0, 0), fullTile())
-        val replacement2 = TileReplacement(PuzzleAreaCoordinate(1, 1), Tile.Builder().withRightSegment().build())
+        val replacement2 = TileReplacement(PuzzleAreaCoordinate(1, 1), Tile(rightSegment = 'X'))
 
         val newArea = emptyArea.replaceTiles(replacement1, replacement2)
 

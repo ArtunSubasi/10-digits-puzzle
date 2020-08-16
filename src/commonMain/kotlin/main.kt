@@ -3,6 +3,7 @@ import com.soywiz.korge.Korge
 import com.soywiz.korge.input.onKeyDown
 import com.soywiz.korge.view.text
 import com.soywiz.korim.color.Colors
+import org.gamezeug.digitspuzzle.application.PiecePlacementUseCase
 import org.gamezeug.digitspuzzle.domain.*
 
 suspend fun main() = Korge(width = 1000, height = 512, bgcolor = Colors["#2b2b2b"]) {
@@ -28,7 +29,8 @@ suspend fun main() = Korge(width = 1000, height = 512, bgcolor = Colors["#2b2b2b
 			InputState.SELECT_Y -> {
 				y = getIntFromKey(it.key)
 				inputState = InputState.SELECT_PIECE
-				puzzleState.area = puzzleState.area.replaceTiles(TileReplacement(PuzzleAreaCoordinate(x, y), fullTile()))
+				val move = Move(PuzzleAreaCoordinate(x, y), PuzzlePieceFactory.build1())
+				PiecePlacementUseCase().placePiece(move, puzzleState)
 				stateView.text = puzzleState.area.toString()
 			}
 		}
