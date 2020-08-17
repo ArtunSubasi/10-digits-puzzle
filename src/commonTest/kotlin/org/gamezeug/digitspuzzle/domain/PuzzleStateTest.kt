@@ -7,7 +7,7 @@ class PuzzleStateTest {
 
     @Test
     fun `create initial puzzle state`() {
-        val state = PuzzleStateFactory.createInitialPuzzleState()
+        val state = PuzzleStateFactory.createInitialPuzzleState(mutableListOf(PuzzlePieceFactory.build1()))
 
         assertEquals(11, state.area.numberOfColumns)
         assertEquals(9, state.area.numberOfRows)

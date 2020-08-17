@@ -9,13 +9,18 @@ import org.gamezeug.digitspuzzle.application.PiecePlacementUseCase
 import org.gamezeug.digitspuzzle.domain.*
 
 suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444"]) {
-	val puzzleState = PuzzleStateFactory.createInitialPuzzleState()
+
 	var inputState = InputState.SELECT_PIECE
-	var piece = 0
+	var pieceNo = 0
 	var x = 0
 	var y = 0
+	val pieces = mapOf(
+			1 to PuzzlePieceFactory.build1(),
+			2 to PuzzlePieceFactory.build2()
+	)
+	val puzzleState = PuzzleStateFactory.createInitialPuzzleState(pieces.values.toMutableList())
 
-	println("Piece: $piece, X: $x, Y: $y, Next action: $inputState")
+	println("Piece: $pieceNo, X: $x, Y: $y, Next action: $inputState")
 
 	val tileWidth: Double = width / puzzleState.area.numberOfColumns
 	val tileHeight: Double = height / puzzleState.area.numberOfRows
@@ -32,7 +37,7 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 	onKeyDown {
 		when (inputState) {
 			InputState.SELECT_PIECE -> {
-				piece = getIntFromKey(it.key)
+				pieceNo = getIntFromKey(it.key)
 				inputState = InputState.SELECT_X
 			}
 			InputState.SELECT_X -> {
@@ -42,8 +47,15 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 			InputState.SELECT_Y -> {
 				y = getIntFromKey(it.key)
 				inputState = InputState.SELECT_PIECE
-				val move = Move(PuzzleAreaCoordinate(x, y), PuzzlePieceFactory.build1())
-				PiecePlacementUseCase().placePiece(move, puzzleState)
+				val move = Move(PuzzleAreaCoordinate(x, y), pieces.getValue(pieceNo))
+				val piecePlacementUseCase = PiecePlacementUseCase()
+
+				if (piecePlacementUseCase.isValidPiecePlacement(move, puzzleState)) {
+					piecePlacementUseCase.placePiece(move, puzzleState)
+				} else {
+					println("not a valid move!")
+				}
+
 
 				// re-render all
 				for ((rowIndex, row) in puzzleState.area.rows.withIndex()) {
@@ -53,7 +65,7 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 				}
 			}
 		}
-		println("Piece: $piece, X: $x, Y: $y, Next action: $inputState")
+		println("Piece: $pieceNo, X: $x, Y: $y, Next action: $inputState")
 	}
 }
 

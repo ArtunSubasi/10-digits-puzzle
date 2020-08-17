@@ -21,10 +21,12 @@ class PiecePlacementUseCaseTest {
 
         // Then
         assertTrue(validPlacement)
+        assertEquals(mutableListOf(piece), state.availablePieces)
+        assertEquals(mutableListOf(), state.usedPieces)
     }
 
     @Test
-    fun `isValidPiecePlacement, invalid, tiles not disjunctive`() {
+    fun `isValidPiecePlacement, invalid, tiles not disjoint`() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(0, 0), piece)
@@ -37,10 +39,12 @@ class PiecePlacementUseCaseTest {
 
         // Then
         assertFalse(validPlacement)
+        assertEquals(mutableListOf(piece), state.availablePieces)
+        assertEquals(mutableListOf(), state.usedPieces)
     }
 
     @Test
-    fun `isValidPiecePlacement, valid, tiles not disjunctive, x-offset`() {
+    fun `isValidPiecePlacement, valid, tiles not disjoint, x-offset`() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(1, 0), piece)
@@ -53,6 +57,8 @@ class PiecePlacementUseCaseTest {
 
         // Then
         assertTrue(validPlacement)
+        assertEquals(mutableListOf(piece), state.availablePieces)
+        assertEquals(mutableListOf(), state.usedPieces)
     }
 
     @Test
@@ -85,6 +91,43 @@ class PiecePlacementUseCaseTest {
             [ X ]
         """.trimIndent()
         assertEquals(expected, state.area.toString())
+        assertEquals(mutableListOf(), state.availablePieces)
+        assertEquals(mutableListOf(piece), state.usedPieces)
+    }
+
+    @Test
+    fun `isPieceAvailable, positive`() {
+        // Given
+        val piece = PuzzlePieceFactory.build1()
+        val move = Move(PuzzleAreaCoordinate(0, 0), piece)
+        val area = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 1)
+        val state = PuzzleState(area, mutableListOf(piece))
+
+        // When
+        val pieceAvailable = PiecePlacementUseCase().isPieceAvailable(move, state)
+
+        // Then
+        assertTrue(pieceAvailable)
+        assertEquals(mutableListOf(piece), state.availablePieces)
+        assertEquals(mutableListOf(), state.usedPieces)
+    }
+
+    @Test
+    fun `isPieceAvailable, negative`() {
+        // Given
+        val piece1 = PuzzlePieceFactory.build1()
+        val piece2 = PuzzlePieceFactory.build2()
+        val move = Move(PuzzleAreaCoordinate(0, 0), piece1)
+        val area = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 1)
+        val state = PuzzleState(area, mutableListOf(piece2))
+
+        // When
+        val pieceAvailable = PiecePlacementUseCase().isPieceAvailable(move, state)
+
+        // Then
+        assertFalse(pieceAvailable)
+        assertEquals(mutableListOf(piece2), state.availablePieces)
+        assertEquals(mutableListOf(), state.usedPieces)
     }
 
 }

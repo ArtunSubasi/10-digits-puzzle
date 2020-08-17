@@ -12,9 +12,8 @@ class PuzzleState(
 
 object PuzzleStateFactory {
 
-    fun createInitialPuzzleState(): PuzzleState {
+    fun createInitialPuzzleState(availablePieces: MutableList<PuzzlePiece>): PuzzleState {
         val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(9, 11)
-        val availablePieces = mutableListOf(PuzzlePieceFactory.build1())
         return PuzzleState(initialArea, availablePieces)
     }
 
