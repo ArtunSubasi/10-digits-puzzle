@@ -14,6 +14,8 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 	var pieceNo = 0
 	var x = 0
 	var y = 0
+	var rotationNo = 0
+	var mirrorNo: Int
 	val pieces = mapOf(
 			1 to PuzzlePieceFactory.build1(),
 			2 to PuzzlePieceFactory.build2()
@@ -46,8 +48,30 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 			}
 			InputState.SELECT_Y -> {
 				y = getIntFromKey(it.key)
+				inputState = InputState.SELECT_ROTATION
+			}
+			InputState.SELECT_ROTATION -> {
+				rotationNo = getIntFromKey(it.key)
+				inputState = InputState.SELECT_MIRROR
+			}
+			InputState.SELECT_MIRROR -> {
+				mirrorNo = getIntFromKey(it.key)
 				inputState = InputState.SELECT_PIECE
-				val move = Move(PuzzleAreaCoordinate(x, y), pieces.getValue(pieceNo))
+
+				val rotation = when (rotationNo) {
+					1 -> Rotation.ROTATE_90_DEGREES_CLOCKWISE
+					2 -> Rotation.ROTATE_180_DEGREES
+					3 -> Rotation.ROTATE_270_DEGREES_CLOCKWISE
+					else -> Rotation.NO_ROTATION
+				}
+				val mirroring = if (mirrorNo == 1) Mirroring.MIRROR_HORIZONTALLY else Mirroring.NO_MIRRORING
+
+				val move = Move(
+						coordinate = PuzzleAreaCoordinate(x, y),
+						piece = pieces.getValue(pieceNo),
+						rotation = rotation,
+						mirroring = mirroring
+				)
 				val piecePlacementUseCase = PiecePlacementUseCase()
 
 				if (piecePlacementUseCase.isValidPiecePlacement(move, puzzleState)) {
@@ -55,7 +79,6 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 				} else {
 					println("not a valid move!")
 				}
-
 
 				// re-render all
 				for ((rowIndex, row) in puzzleState.area.rows.withIndex()) {
@@ -125,7 +148,9 @@ class TilePrinter(private val parent: Container, private val tileWidth: Double, 
 enum class InputState {
 	SELECT_PIECE,
 	SELECT_X,
-	SELECT_Y
+	SELECT_Y,
+	SELECT_ROTATION,
+	SELECT_MIRROR
 }
 
 private fun getIntFromKey(key: Key): Int {

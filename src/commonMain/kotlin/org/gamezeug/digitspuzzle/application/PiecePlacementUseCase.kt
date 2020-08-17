@@ -5,8 +5,9 @@ import org.gamezeug.digitspuzzle.domain.*
 class PiecePlacementUseCase {
 
     fun isValidPiecePlacement(move: Move, state: PuzzleState): Boolean {
-        if (!state.area.hasRoomFor(move.piece.area, move.coordinate)) return false
-        for ((rowIndex, row) in move.piece.area.rows.withIndex()) {
+        val effectiveArea = move.getEffectiveArea()
+        if (!state.area.hasRoomFor(effectiveArea, move.coordinate)) return false
+        for ((rowIndex, row) in effectiveArea.rows.withIndex()) {
             for ((colIndex, newTile) in row.tiles.withIndex()) {
                 val tileInThePuzzle = state.area.getTile(colIndex + move.coordinate.x, rowIndex + move.coordinate.y)
                 if (!newTile.isDisjoint(tileInThePuzzle)) return false
@@ -26,7 +27,8 @@ class PiecePlacementUseCase {
         if (!isPieceAvailable(move, state)) {
             TODO("nope nope nope")
         }
-        for ((rowIndex, row) in move.piece.area.rows.withIndex()) {
+        val effectiveArea = move.getEffectiveArea()
+        for ((rowIndex, row) in effectiveArea.rows.withIndex()) {
             for ((colIndex, newTile) in row.tiles.withIndex()) {
                 val tileInThePuzzle = state.area.getTile(colIndex + move.coordinate.x, rowIndex + move.coordinate.y)
                 val mergedTile = tileInThePuzzle.merge(newTile)

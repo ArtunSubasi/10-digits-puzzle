@@ -81,6 +81,18 @@ class PuzzlePieceTest {
     }
 
     @Test
+    fun rotateBy() {
+        val puzzlePiece = PuzzlePieceFactory.build2()
+        assertEquals(puzzlePiece, puzzlePiece.rotateBy(Rotation.NO_ROTATION))
+        assertEquals(puzzlePiece.rotate90DegreesClockwise().toString(),
+                puzzlePiece.rotateBy(Rotation.ROTATE_90_DEGREES_CLOCKWISE).toString())
+        assertEquals(puzzlePiece.rotate180Degrees().toString(),
+                puzzlePiece.rotateBy(Rotation.ROTATE_180_DEGREES).toString())
+        assertEquals(puzzlePiece.rotate270DegreesClockwise().toString(),
+                puzzlePiece.rotateBy(Rotation.ROTATE_270_DEGREES_CLOCKWISE).toString())
+    }
+
+    @Test
     fun `rotate90DegreesClockwise Piece 1`() {
         val expected = """
             [   ][ 1 ][ 1 ][ 1 ][   ]
@@ -158,6 +170,14 @@ class PuzzlePieceTest {
 
         assertEquals("2", puzzlePiece.name)
         assertEquals(expected, puzzlePiece.toString())
+    }
+
+    @Test
+    fun mirrorBy() {
+        val puzzlePiece = PuzzlePieceFactory.build2()
+        assertEquals(puzzlePiece.toString(), puzzlePiece.mirrorBy(Mirroring.NO_MIRRORING).toString())
+        assertEquals(puzzlePiece.mirrorHorizontally().toString(),
+                puzzlePiece.mirrorBy(Mirroring.MIRROR_HORIZONTALLY).toString())
     }
 
 }

@@ -7,6 +7,15 @@ import kotlinx.coroutines.GlobalScope
 
 class PuzzlePiece(val name: String, val area: PuzzleArea) {
 
+    fun rotateBy(rotation: Rotation): PuzzlePiece {
+        return when (rotation) {
+            Rotation.NO_ROTATION -> this
+            Rotation.ROTATE_90_DEGREES_CLOCKWISE -> rotate90DegreesClockwise()
+            Rotation.ROTATE_180_DEGREES -> rotate180Degrees()
+            Rotation.ROTATE_270_DEGREES_CLOCKWISE -> rotate270DegreesClockwise()
+        }
+    }
+
     fun rotate90DegreesClockwise(): PuzzlePiece {
         val newNumberOfColumns = area.numberOfRows
         val newNumberOfRows = area.numberOfColumns
@@ -24,6 +33,13 @@ class PuzzlePiece(val name: String, val area: PuzzleArea) {
 
     fun rotate270DegreesClockwise(): PuzzlePiece {
         return rotate180Degrees().rotate90DegreesClockwise()
+    }
+
+    fun mirrorBy(mirroring: Mirroring): PuzzlePiece {
+        return when (mirroring) {
+            Mirroring.NO_MIRRORING -> this
+            Mirroring.MIRROR_HORIZONTALLY -> mirrorHorizontally()
+        }
     }
 
     fun mirrorHorizontally(): PuzzlePiece {
