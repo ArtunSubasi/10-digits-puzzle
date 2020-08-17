@@ -6,6 +6,26 @@ import com.soywiz.korio.file.std.resourcesVfs
 import kotlinx.coroutines.GlobalScope
 
 class PuzzlePiece(val name: String, val area: PuzzleArea) {
+
+    fun rotate90DegreesClockwise(): PuzzlePiece {
+        val newNumberOfColumns = area.numberOfRows
+        val newNumberOfRows = area.numberOfColumns
+        val newRows = List(newNumberOfRows) {
+            y -> List(newNumberOfColumns) {
+                x -> area.getTile(y, area.numberOfRows - 1 - x).rotate90DegreesClockwise()
+            }
+        }
+        return PuzzlePiece(name, PuzzleArea(newRows.map { PuzzleRow(it) }))
+    }
+
+    fun rotate180Degrees(): PuzzlePiece {
+        return rotate90DegreesClockwise().rotate90DegreesClockwise()
+    }
+
+    fun rotate270DegreesClockwise(): PuzzlePiece {
+        return rotate180Degrees().rotate90DegreesClockwise()
+    }
+
     override fun toString() = area.toString()
 }
 

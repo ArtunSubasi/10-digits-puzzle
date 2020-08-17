@@ -30,6 +30,13 @@ class TileTest {
     }
 
     @Test
+    fun rotate90DegreesClockwise() {
+        val tile = Tile(topSegment = '1', leftSegment = '2')
+        val expected = Tile(topSegment = '2', rightSegment = '1')
+        assertEquals(expected, tile.rotate90DegreesClockwise())
+    }
+
+    @Test
     fun `toString with empty tile`() {
         val expected = """
             [   ]

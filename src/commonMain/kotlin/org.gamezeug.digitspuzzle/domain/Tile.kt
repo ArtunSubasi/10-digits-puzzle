@@ -45,6 +45,15 @@ data class Tile(
         )
     }
 
+    fun rotate90DegreesClockwise(): Tile {
+        return Tile(
+                leftSegment = bottomSegment,
+                topSegment = leftSegment,
+                rightSegment = topSegment,
+                bottomSegment = rightSegment
+        )
+    }
+
     private fun getSegmentMask(): Byte {
         var segmentMask: Byte = 0x0000
         if (leftSegment != ' ') segmentMask = segmentMask or leftSegmentOnlyMask
