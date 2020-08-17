@@ -1,8 +1,11 @@
 import com.soywiz.korev.Key
-import com.soywiz.korge.Korge
-import com.soywiz.korge.input.onKeyDown
-import com.soywiz.korge.view.text
-import com.soywiz.korim.color.Colors
+import com.soywiz.korge.*
+import com.soywiz.korge.input.*
+import com.soywiz.korge.view.*
+import com.soywiz.korim.color.*
+import com.soywiz.korim.vector.*
+import com.soywiz.korma.geom.*
+import com.soywiz.korma.geom.vector.*
 import org.gamezeug.digitspuzzle.application.PiecePlacementUseCase
 import org.gamezeug.digitspuzzle.domain.*
 
@@ -13,8 +16,31 @@ suspend fun main() = Korge(width = 1000, height = 512, bgcolor = Colors["#2b2b2b
 	var x = 0
 	var y = 0
 
-	val stateView = text(puzzleState.toString())
+	val stateView = text("")
 	println("Piece: $piece, X: $x, Y: $y, Next action: $inputState")
+
+	graphics {
+		val graphics = this
+		graphics.useNativeRendering = false
+
+		position(100, 100)
+		fill(Colors.RED) {
+			//rect(-1.0, -1.0, 50.0, 50.0)
+			val point1 = Point(0.5,0.5)
+			val point2 = Point(49.5,0.5)
+			val point3 = Point(25.0,24.5)
+			line(point1, point2)
+			lineTo(point3)
+			lineTo(point1)
+		}
+
+		stroke(Colors.WHITE, Context2d.StrokeInfo(thickness = 2.0)) {
+			rect(0.0, 0.0, 50.0, 50.0)
+			line(0.0, 0.0, 50.0, 50.0)
+			line(50.0, 0.0, 0.0, 50.0)
+		}
+
+	}
 
 	onKeyDown {
 		when (inputState) {
