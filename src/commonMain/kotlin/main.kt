@@ -15,7 +15,6 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 	var x = 0
 	var y = 0
 
-	val stateView = text("")
 	println("Piece: $piece, X: $x, Y: $y, Next action: $inputState")
 
 	val tileWidth: Double = width / puzzleState.area.numberOfColumns
@@ -45,7 +44,13 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 				inputState = InputState.SELECT_PIECE
 				val move = Move(PuzzleAreaCoordinate(x, y), PuzzlePieceFactory.build1())
 				PiecePlacementUseCase().placePiece(move, puzzleState)
-				stateView.text = puzzleState.area.toString()
+
+				// re-render all
+				for ((rowIndex, row) in puzzleState.area.rows.withIndex()) {
+					for ((colIndex, tile) in row.tiles.withIndex()) {
+						tilePrinter.printTile(colIndex, rowIndex, tile)
+					}
+				}
 			}
 		}
 		println("Piece: $piece, X: $x, Y: $y, Next action: $inputState")
