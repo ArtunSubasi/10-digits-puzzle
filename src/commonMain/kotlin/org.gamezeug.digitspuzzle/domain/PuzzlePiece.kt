@@ -26,6 +26,15 @@ class PuzzlePiece(val name: String, val area: PuzzleArea) {
         return rotate180Degrees().rotate90DegreesClockwise()
     }
 
+    fun mirrorHorizontally(): PuzzlePiece {
+        val newRows = List(area.numberOfRows) {
+            y -> List(area.numberOfColumns) {
+            x -> area.getTile(area.numberOfColumns - 1 - x, y).mirrorHorizontally()
+        }
+        }
+        return PuzzlePiece(name, PuzzleArea(newRows.map { PuzzleRow(it) }))
+    }
+
     override fun toString() = area.toString()
 }
 

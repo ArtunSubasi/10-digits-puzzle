@@ -37,6 +37,13 @@ class TileTest {
     }
 
     @Test
+    fun mirrorHorizontally() {
+        val tile = Tile(topSegment = '1', leftSegment = '2')
+        val expected = Tile(topSegment = '1', rightSegment = '2')
+        assertEquals(expected, tile.mirrorHorizontally())
+    }
+
+    @Test
     fun `toString with empty tile`() {
         val expected = """
             [   ]

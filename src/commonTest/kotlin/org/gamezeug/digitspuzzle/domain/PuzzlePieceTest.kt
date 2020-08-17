@@ -134,4 +134,30 @@ class PuzzlePieceTest {
         assertEquals(expected, puzzlePiece.toString())
     }
 
+    @Test
+    fun `mirrorHorizontally Piece 2`() {
+        val expected = """
+            [   ][ 2 ][   ]
+            [  2][2 2][2  ]
+            [ 2 ][ 2 ][   ]
+            [ 2 ][   ][   ]
+            [2 2][   ][   ]
+            [ 2 ][   ][   ]
+            [ 2 ][ 2 ][   ]
+            [  2][2 2][2  ]
+            [   ][ 2 ][ 2 ]
+            [   ][   ][ 2 ]
+            [   ][   ][2 2]
+            [   ][   ][ 2 ]
+            [   ][ 2 ][ 2 ]
+            [  2][2 2][2  ]
+            [   ][ 2 ][   ]
+        """.trimIndent()
+
+        val puzzlePiece = PuzzlePieceFactory.build2().mirrorHorizontally()
+
+        assertEquals("2", puzzlePiece.name)
+        assertEquals(expected, puzzlePiece.toString())
+    }
+
 }

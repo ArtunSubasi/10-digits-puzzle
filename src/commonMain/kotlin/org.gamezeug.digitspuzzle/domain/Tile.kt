@@ -54,6 +54,15 @@ data class Tile(
         )
     }
 
+    fun mirrorHorizontally(): Tile {
+        return Tile(
+                leftSegment = rightSegment,
+                topSegment = topSegment,
+                rightSegment = leftSegment,
+                bottomSegment = bottomSegment
+        )
+    }
+
     private fun getSegmentMask(): Byte {
         var segmentMask: Byte = 0x0000
         if (leftSegment != ' ') segmentMask = segmentMask or leftSegmentOnlyMask
