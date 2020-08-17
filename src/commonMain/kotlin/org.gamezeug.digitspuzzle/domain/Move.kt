@@ -2,6 +2,7 @@ package org.gamezeug.digitspuzzle.domain
 
 /**
  * A move that a player can do to put a puzzle piece to the puzzle board.
+ * If the piece gets mirrored and rotated, the mirroring applies first.
  */
 data class Move(
         val coordinate: PuzzleAreaCoordinate,

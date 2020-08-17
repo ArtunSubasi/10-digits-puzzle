@@ -1,13 +1,5 @@
 package org.gamezeug.digitspuzzle.domain
 
-import kotlin.experimental.and
-import kotlin.experimental.or
-
-const val leftSegmentOnlyMask: Byte   = 0b1000
-const val topSegmentOnlyMask: Byte    = 0b0100
-const val rightSegmentOnlyMask: Byte  = 0b0010
-const val bottomSegmentOnlyMask: Byte = 0b0001
-
 /**
  * Represents a tile of the puzzle board. Each tile itself is divided into 4 segments (left, top, right, bottom)
  * which may be occupied separately. If a segment is not occupied, it contains the empty space char: ' '
@@ -17,12 +9,6 @@ const val bottomSegmentOnlyMask: Byte = 0b0001
  * [X X]
  * [ X ]
  * </pre>
- *
- * Internally, the segment mask is represented as a byte. 0 is free. 1 is occupied.
- * 1. bit - left
- * 2. bit - top
- * 3. bit - right
- * 4. bit - bottom
  */
 data class Tile(
         val leftSegment: Char = ' ',
@@ -32,8 +18,10 @@ data class Tile(
 ) {
 
     fun isDisjoint(other: Tile): Boolean {
-        val zeroByteMask: Byte = 0
-        return (this.getSegmentMask() and other.getSegmentMask()) == zeroByteMask
+        return (this.leftSegment == ' ' || other.leftSegment == ' ')
+                && (this.topSegment == ' ' || other.topSegment == ' ')
+                && (this.rightSegment == ' ' || other.rightSegment == ' ')
+                && (this.bottomSegment == ' ' || other.bottomSegment == ' ')
     }
 
     fun merge(other: Tile): Tile {
@@ -61,15 +49,6 @@ data class Tile(
                 rightSegment = leftSegment,
                 bottomSegment = bottomSegment
         )
-    }
-
-    private fun getSegmentMask(): Byte {
-        var segmentMask: Byte = 0x0000
-        if (leftSegment != ' ') segmentMask = segmentMask or leftSegmentOnlyMask
-        if (topSegment != ' ') segmentMask = segmentMask or topSegmentOnlyMask
-        if (rightSegment != ' ') segmentMask = segmentMask or rightSegmentOnlyMask
-        if (bottomSegment != ' ') segmentMask = segmentMask or bottomSegmentOnlyMask
-        return segmentMask
     }
 
     override fun toString(): String {
