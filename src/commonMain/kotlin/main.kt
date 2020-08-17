@@ -4,12 +4,11 @@ import com.soywiz.korge.input.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korim.vector.*
-import com.soywiz.korma.geom.*
 import com.soywiz.korma.geom.vector.*
 import org.gamezeug.digitspuzzle.application.PiecePlacementUseCase
 import org.gamezeug.digitspuzzle.domain.*
 
-suspend fun main() = Korge(width = 1000, height = 512, bgcolor = Colors["#2b2b2b"]) {
+suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444"]) {
 	val puzzleState = PuzzleStateFactory.createInitialPuzzleState()
 	var inputState = InputState.SELECT_PIECE
 	var piece = 0
@@ -19,27 +18,16 @@ suspend fun main() = Korge(width = 1000, height = 512, bgcolor = Colors["#2b2b2b
 	val stateView = text("")
 	println("Piece: $piece, X: $x, Y: $y, Next action: $inputState")
 
-	graphics {
-		val graphics = this
-		graphics.useNativeRendering = false
+	val tileWidth: Double = width / puzzleState.area.numberOfColumns
+	val tileHeight: Double = height / puzzleState.area.numberOfRows
+	println("tileWidth: $tileWidth, tileHeight: $tileHeight")
+	val tilePrinter = TilePrinter(this, tileWidth, tileHeight)
 
-		position(100, 100)
-		fill(Colors.RED) {
-			//rect(-1.0, -1.0, 50.0, 50.0)
-			val point1 = Point(0.5,0.5)
-			val point2 = Point(49.5,0.5)
-			val point3 = Point(25.0,24.5)
-			line(point1, point2)
-			lineTo(point3)
-			lineTo(point1)
+	for ((rowIndex, row) in puzzleState.area.rows.withIndex()) {
+		for ((colIndex, tile) in row.tiles.withIndex()) {
+			tilePrinter.printGrids(colIndex, rowIndex)
+			tilePrinter.printTile(colIndex, rowIndex, tile)
 		}
-
-		stroke(Colors.WHITE, Context2d.StrokeInfo(thickness = 2.0)) {
-			rect(0.0, 0.0, 50.0, 50.0)
-			line(0.0, 0.0, 50.0, 50.0)
-			line(50.0, 0.0, 0.0, 50.0)
-		}
-
 	}
 
 	onKeyDown {
@@ -61,6 +49,59 @@ suspend fun main() = Korge(width = 1000, height = 512, bgcolor = Colors["#2b2b2b
 			}
 		}
 		println("Piece: $piece, X: $x, Y: $y, Next action: $inputState")
+	}
+}
+
+class TilePrinter(private val parent: Container, private val tileWidth: Double, private val tileHeight: Double) {
+	fun printGrids(x: Int, y: Int) {
+		parent.graphics {
+			useNativeRendering = false
+			val x0: Double = x * tileWidth
+			val y0: Double = y * tileHeight
+			val x1: Double = x0 + tileWidth
+			val y1: Double = y0 + tileHeight
+			stroke(Colors["#333333"], Context2d.StrokeInfo(thickness = 2.0)) {
+				rect(x0, y0, tileWidth, tileHeight)
+			}
+			stroke(Colors["#333333"], Context2d.StrokeInfo(thickness = 1.0)) {
+				line(x0, y0, x1, y1)
+				line(x1, y0, x0, y1)
+			}
+		}
+	}
+
+	fun printTile(x: Int, y: Int, tile: Tile) {
+		parent.graphics {
+			useNativeRendering = false
+			val x0: Double = x * tileWidth
+			val y0: Double = y * tileHeight
+			val x1: Double = x0 + tileWidth
+			val y1: Double = y0 + tileHeight
+			val xCenter: Double = x0 + (tileWidth / 2)
+			val yCenter: Double = y0 + (tileHeight / 2)
+			fill(Colors.WHITE) {
+				if (tile.leftSegment != ' ') {
+					line(x0, y0, xCenter, yCenter)
+					lineTo(x0, y1)
+					lineTo(x0, y0)
+				}
+				if (tile.topSegment != ' ') {
+					line(x0, y0, x1, y0)
+					lineTo(xCenter, yCenter)
+					lineTo(x0, y0)
+				}
+				if (tile.rightSegment != ' ') {
+					line(x1, y0, xCenter, yCenter)
+					lineTo(x1, y1)
+					lineTo(x1, y0)
+				}
+				if (tile.bottomSegment != ' ') {
+					line(x0, y1, x1, y1)
+					lineTo(xCenter, yCenter)
+					lineTo(x0, y1)
+				}
+			}
+		}
 	}
 }
 
