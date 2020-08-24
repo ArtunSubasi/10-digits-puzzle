@@ -110,6 +110,107 @@ class PuzzlePieceTest {
     }
 
     @Test
+    fun build5() {
+        val expected = """
+            [   ][ 5 ][   ]
+            [  5][5 5][5  ]
+            [ 5 ][ 5 ][   ]
+            [ 5 ][   ][   ]
+            [5 5][   ][   ]
+            [ 5 ][   ][   ]
+            [ 5 ][ 5 ][   ]
+            [  5][5 5][5  ]
+            [   ][ 5 ][ 5 ]
+            [   ][   ][ 5 ]
+            [   ][   ][5 5]
+            [   ][   ][ 5 ]
+            [   ][ 5 ][ 5 ]
+            [  5][5 5][5  ]
+            [   ][ 5 ][   ]
+        """.trimIndent()
+        val puzzlePiece = PuzzlePieceFactory.build5()
+
+        assertEquals("5", puzzlePiece.name)
+        assertEquals(expected, puzzlePiece.toString())
+    }
+
+    @Test
+    fun build6() {
+        val expected = """
+            [   ][ 6 ][   ]
+            [  6][6 6][6  ]
+            [ 6 ][ 6 ][   ]
+            [ 6 ][   ][   ]
+            [6 6][   ][   ]
+            [ 6 ][   ][   ]
+            [ 6 ][ 6 ][   ]
+            [  6][6 6][6  ]
+            [ 6 ][ 6 ][ 6 ]
+            [ 6 ][   ][ 6 ]
+            [6 6][   ][6 6]
+            [ 6 ][   ][ 6 ]
+            [ 6 ][ 6 ][ 6 ]
+            [  6][6 6][6  ]
+            [   ][ 6 ][   ]
+        """.trimIndent()
+        val puzzlePiece = PuzzlePieceFactory.build6()
+
+        assertEquals("6", puzzlePiece.name)
+        assertEquals(expected, puzzlePiece.toString())
+    }
+
+    @Test
+    fun build7() {
+        val expected = """
+            [   ][ 7 ][   ]
+            [  7][7 7][7  ]
+            [   ][ 7 ][ 7 ]
+            [   ][   ][ 7 ]
+            [   ][   ][7 7]
+            [   ][   ][ 7 ]
+            [   ][   ][ 7 ]
+            [   ][   ][  7]
+            [   ][   ][ 7 ]
+            [   ][   ][ 7 ]
+            [   ][   ][7 7]
+            [   ][   ][ 7 ]
+            [   ][   ][ 7 ]
+            [   ][   ][   ]
+            [   ][   ][   ]
+        """.trimIndent()
+        val puzzlePiece = PuzzlePieceFactory.build7()
+
+        assertEquals("7", puzzlePiece.name)
+        assertEquals(expected, puzzlePiece.toString())
+    }
+
+    @Test
+    fun build8() {
+        val expected = """
+            [   ][ 8 ][   ]
+            [  8][8 8][8  ]
+            [ 8 ][ 8 ][ 8 ]
+            [ 8 ][   ][ 8 ]
+            [8 8][   ][8 8]
+            [ 8 ][   ][ 8 ]
+            [ 8 ][ 8 ][ 8 ]
+            [  8][8 8][8  ]
+            [ 8 ][ 8 ][ 8 ]
+            [ 8 ][   ][ 8 ]
+            [8 8][   ][8 8]
+            [ 8 ][   ][ 8 ]
+            [ 8 ][ 8 ][ 8 ]
+            [  8][8 8][8  ]
+            [   ][ 8 ][   ]
+        """.trimIndent()
+        val puzzlePiece = PuzzlePieceFactory.build8()
+
+        assertEquals("8", puzzlePiece.name)
+        assertEquals(expected, puzzlePiece.toString())
+    }
+
+
+    @Test
     fun buildFromFile() {
         val testPiece = PuzzlePieceFactory.buildFromFile('2', "testPiece.csv")
         val expected = """

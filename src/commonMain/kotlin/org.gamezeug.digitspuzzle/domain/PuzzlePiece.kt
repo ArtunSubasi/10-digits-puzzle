@@ -66,6 +66,11 @@ object PuzzlePieceFactory {
     fun build2(): PuzzlePiece = buildDigit('2')
     fun build3(): PuzzlePiece = buildDigit('3')
     fun build4(): PuzzlePiece = buildDigit('4')
+    fun build5(): PuzzlePiece = buildFromFile('5', "puzzlePieces/2.csv").mirrorHorizontally()
+    fun build6(): PuzzlePiece = buildDigit('6')
+    fun build7(): PuzzlePiece = buildDigit('7')
+    fun build8(): PuzzlePiece = buildDigit('8')
+
     private fun buildDigit(digitChar: Char) = buildFromFile(digitChar, "puzzlePieces/$digitChar.csv")
 
     fun buildFromFile(charToPrint: Char, filePath: String): PuzzlePiece {
