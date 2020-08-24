@@ -21,9 +21,6 @@ class PiecePlacementUseCaseTest {
 
         // Then
         assertTrue(validPlacement)
-        assertEquals(mutableListOf(piece), state.availablePieces)
-        assertEquals(mutableListOf(), state.usedPieces)
-        assertEquals(mutableListOf(), state.moves)
     }
 
     @Test
@@ -40,9 +37,6 @@ class PiecePlacementUseCaseTest {
 
         // Then
         assertFalse(validPlacement)
-        assertEquals(mutableListOf(piece), state.availablePieces)
-        assertEquals(mutableListOf(), state.usedPieces)
-        assertEquals(mutableListOf(), state.moves)
     }
 
     @Test
@@ -59,9 +53,6 @@ class PiecePlacementUseCaseTest {
 
         // Then
         assertTrue(validPlacement)
-        assertEquals(mutableListOf(piece), state.availablePieces)
-        assertEquals(mutableListOf(), state.usedPieces)
-        assertEquals(mutableListOf(), state.moves)
     }
 
     @Test
@@ -73,7 +64,7 @@ class PiecePlacementUseCaseTest {
         val state = PuzzleState(area, mutableListOf(piece))
 
         // When
-        PiecePlacementUseCase().placePiece(move, state)
+        val newState = PiecePlacementUseCase().placePiece(move, state)
 
         // Then
         val expected = """
@@ -93,10 +84,10 @@ class PiecePlacementUseCaseTest {
             [  X]
             [ X ]
         """.trimIndent()
-        assertEquals(expected, state.area.toString())
-        assertEquals(mutableListOf(), state.availablePieces)
-        assertEquals(mutableListOf(piece), state.usedPieces)
-        assertEquals(mutableListOf(move), state.moves)
+        assertEquals(expected, newState.area.toString())
+        assertEquals(listOf(), newState.availablePieces)
+        assertEquals(listOf(piece), newState.usedPieces)
+        assertEquals(listOf(move), newState.moves)
     }
 
     @Test
@@ -112,9 +103,6 @@ class PiecePlacementUseCaseTest {
 
         // Then
         assertTrue(pieceAvailable)
-        assertEquals(mutableListOf(piece), state.availablePieces)
-        assertEquals(mutableListOf(), state.usedPieces)
-        assertEquals(mutableListOf(), state.moves)
     }
 
     @Test
@@ -131,9 +119,6 @@ class PiecePlacementUseCaseTest {
 
         // Then
         assertFalse(pieceAvailable)
-        assertEquals(mutableListOf(piece2), state.availablePieces)
-        assertEquals(mutableListOf(), state.usedPieces)
-        assertEquals(mutableListOf(), state.moves)
     }
 
 }

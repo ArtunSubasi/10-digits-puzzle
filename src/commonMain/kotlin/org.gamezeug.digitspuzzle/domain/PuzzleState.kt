@@ -1,12 +1,11 @@
 package org.gamezeug.digitspuzzle.domain
 
 class PuzzleState(
-        var area: PuzzleArea,
-        val availablePieces: MutableList<PuzzlePiece>
+        val area: PuzzleArea,
+        val availablePieces: List<PuzzlePiece>,
+        val moves: List<Move> = listOf(),
+        val usedPieces: List<PuzzlePiece> = listOf()
 ) {
-    val moves: MutableList<Move> = mutableListOf()
-    val usedPieces: MutableList<PuzzlePiece> = mutableListOf()
-
     override fun toString() = area.toString()
 }
 

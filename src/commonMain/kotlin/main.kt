@@ -28,7 +28,7 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 			8 to PuzzlePieceFactory.build8(),
 			9 to PuzzlePieceFactory.build9()
 	)
-	val puzzleState = PuzzleStateFactory.createInitialPuzzleState(pieces.values.toMutableList())
+	var puzzleState = PuzzleStateFactory.createInitialPuzzleState(pieces.values.toMutableList())
 
 	println("Piece: $pieceNo, X: $x, Y: $y, Next action: $inputState")
 
@@ -83,7 +83,7 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 				val piecePlacementUseCase = PiecePlacementUseCase()
 
 				if (piecePlacementUseCase.isValidPiecePlacement(move, puzzleState)) {
-					piecePlacementUseCase.placePiece(move, puzzleState)
+					puzzleState = piecePlacementUseCase.placePiece(move, puzzleState)
 				} else {
 					println("not a valid move!")
 				}
