@@ -4,14 +4,34 @@ import org.gamezeug.digitspuzzle.domain.*
 
 class SolvePuzzleUseCase {
 
-    val piecePlacementUseCase = PiecePlacementUseCase()
+    private val piecePlacementUseCase = PiecePlacementUseCase()
+    private var triedMoves: Long = 0
 
     /**
      * Places all pieces in a valid way so that all available pieces are used.
      */
-    fun solvePuzzle(state: PuzzleState): PuzzleState {
-
-        TODO()
+    fun solvePuzzle(state: PuzzleState): PuzzleState? {
+        if (state.availablePieces.isEmpty()) {
+            println("==================")
+            println("Solved the puzzle!")
+            println("==================")
+            println(state)
+            return state
+        }
+        println("Trying to solve a puzzle with ${state.availablePieces.size} available pieces. Move $triedMoves")
+        if (triedMoves % 1000L == 0L) {
+            println(state)
+        }
+        val availableValidMoves = getAvailableValidMoves(state)
+        for (move in availableValidMoves) {
+            val newState = piecePlacementUseCase.placePiece(move, state)
+            triedMoves++
+            val potentiallySolvedPuzzle = solvePuzzle(newState)
+            if (potentiallySolvedPuzzle != null) {
+                return potentiallySolvedPuzzle
+            }
+        }
+        return null
     }
 
     /**
@@ -30,6 +50,9 @@ class SolvePuzzleUseCase {
                     }
                 }
             }
+        }
+        if (availableValidMoves.size > 0) {
+            println("Found ${availableValidMoves.size} valid moves!")
         }
         return availableValidMoves.toList()
     }

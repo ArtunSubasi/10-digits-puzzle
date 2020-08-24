@@ -3,33 +3,42 @@ package org.gamezeug.digitspuzzle.application
 import org.gamezeug.digitspuzzle.domain.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class SolvePuzzleUseCaseTest {
 
     @Test
-    fun solvePuzzle() {
-        // Given
-        val pieces = mapOf(
-                0 to PuzzlePieceFactory.build0(),
-                1 to PuzzlePieceFactory.build1(),
-                2 to PuzzlePieceFactory.build2(),
-                3 to PuzzlePieceFactory.build3(),
-                4 to PuzzlePieceFactory.build4(),
-                5 to PuzzlePieceFactory.build5(),
-                6 to PuzzlePieceFactory.build6(),
-                7 to PuzzlePieceFactory.build7(),
-                8 to PuzzlePieceFactory.build8(),
-                9 to PuzzlePieceFactory.build9()
+    fun `solvePuzzle small`() {
+        val pieces = listOf(
+                PuzzlePieceFactory.build2(),
+                PuzzlePieceFactory.build0(),
+                PuzzlePieceFactory.build1(),
+                PuzzlePieceFactory.build1()
         )
-        val puzzleState = PuzzleStateFactory.createInitialPuzzleState(pieces.values.toList())
+        val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(7, 5)
+        val puzzleState = PuzzleState(initialArea, pieces)
+
+        // When
+        val solvedPuzzleState = SolvePuzzleUseCase().solvePuzzle(puzzleState)!!
+
+        // Then
+        assertEquals(listOf(), solvedPuzzleState.availablePieces)
+        assertEquals(pieces.toSet(), solvedPuzzleState.usedPieces.toSet())
+    }
+
+    @Test
+    fun `solvePuzzle not possible`() {
+        // Given
+        val pieces = listOf(PuzzlePieceFactory.build0(), PuzzlePieceFactory.build1())
+        val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 3)
+        val puzzleState = PuzzleState(initialArea, pieces)
 
         // When
         val solvedPuzzleState = SolvePuzzleUseCase().solvePuzzle(puzzleState)
 
         // Then
-        assertEquals(listOf(), solvedPuzzleState.availablePieces)
-        assertEquals(pieces.values.toSet(), solvedPuzzleState.usedPieces.toSet())
+        assertNull(solvedPuzzleState)
     }
 
     @Test
