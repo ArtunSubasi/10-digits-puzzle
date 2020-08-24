@@ -37,6 +37,7 @@ class PiecePlacementUseCase {
                 state.area = state.area.replaceTiles(tileReplacement)
             }
         }
+        state.moves.add(move)
         state.availablePieces.remove(move.piece)
         state.usedPieces.add(move.piece)
     }

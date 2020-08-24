@@ -23,6 +23,7 @@ class PiecePlacementUseCaseTest {
         assertTrue(validPlacement)
         assertEquals(mutableListOf(piece), state.availablePieces)
         assertEquals(mutableListOf(), state.usedPieces)
+        assertEquals(mutableListOf(), state.moves)
     }
 
     @Test
@@ -41,6 +42,7 @@ class PiecePlacementUseCaseTest {
         assertFalse(validPlacement)
         assertEquals(mutableListOf(piece), state.availablePieces)
         assertEquals(mutableListOf(), state.usedPieces)
+        assertEquals(mutableListOf(), state.moves)
     }
 
     @Test
@@ -59,6 +61,7 @@ class PiecePlacementUseCaseTest {
         assertTrue(validPlacement)
         assertEquals(mutableListOf(piece), state.availablePieces)
         assertEquals(mutableListOf(), state.usedPieces)
+        assertEquals(mutableListOf(), state.moves)
     }
 
     @Test
@@ -93,6 +96,7 @@ class PiecePlacementUseCaseTest {
         assertEquals(expected, state.area.toString())
         assertEquals(mutableListOf(), state.availablePieces)
         assertEquals(mutableListOf(piece), state.usedPieces)
+        assertEquals(mutableListOf(move), state.moves)
     }
 
     @Test
@@ -110,6 +114,7 @@ class PiecePlacementUseCaseTest {
         assertTrue(pieceAvailable)
         assertEquals(mutableListOf(piece), state.availablePieces)
         assertEquals(mutableListOf(), state.usedPieces)
+        assertEquals(mutableListOf(), state.moves)
     }
 
     @Test
@@ -128,6 +133,7 @@ class PiecePlacementUseCaseTest {
         assertFalse(pieceAvailable)
         assertEquals(mutableListOf(piece2), state.availablePieces)
         assertEquals(mutableListOf(), state.usedPieces)
+        assertEquals(mutableListOf(), state.moves)
     }
 
 }
