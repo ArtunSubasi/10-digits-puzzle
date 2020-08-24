@@ -4,7 +4,7 @@ package org.gamezeug.digitspuzzle.domain
  * A move that a player can do to put a puzzle piece to the puzzle board.
  * If the piece gets mirrored and rotated, the mirroring applies first.
  */
-data class Move(
+class Move(
         val coordinate: PuzzleAreaCoordinate,
         val piece: PuzzlePiece,
         val rotation: Rotation = Rotation.NO_ROTATION,
@@ -12,6 +12,14 @@ data class Move(
 ) {
     fun getEffectiveArea(): PuzzleArea {
         return piece.mirrorBy(mirroring).rotateBy(rotation).area
+    }
+    override fun toString(): String = getEffectiveArea().toString()
+    override fun hashCode(): Int = getEffectiveArea().hashCode() * coordinate.hashCode()
+    override fun equals(other: Any?): Boolean {
+        return when (other) {
+            is Move -> getEffectiveArea() == other.getEffectiveArea() && coordinate == other.coordinate
+            else -> false
+        }
     }
 }
 

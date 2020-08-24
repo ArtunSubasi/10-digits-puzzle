@@ -28,7 +28,7 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 			8 to PuzzlePieceFactory.build8(),
 			9 to PuzzlePieceFactory.build9()
 	)
-	var puzzleState = PuzzleStateFactory.createInitialPuzzleState(pieces.values.toMutableList())
+	var puzzleState = PuzzleStateFactory.createInitialPuzzleState(pieces.values.toList())
 
 	println("Piece: $pieceNo, X: $x, Y: $y, Next action: $inputState")
 

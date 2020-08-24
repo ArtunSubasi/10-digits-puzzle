@@ -3,7 +3,7 @@ package org.gamezeug.digitspuzzle.domain
 /**
  * An immutable tiled area consisting of rows and columns.
  */
-class PuzzleArea(val rows: List<PuzzleRow>) {
+data class PuzzleArea(val rows: List<PuzzleRow>) {
     val numberOfRows = rows.size
     val numberOfColumns = rows[0].size
 
@@ -70,7 +70,7 @@ data class PuzzleAreaCoordinate(val x: Int, val y: Int)
 
 data class TileReplacement(val coordinate: PuzzleAreaCoordinate, val newTile: Tile)
 
-class PuzzleRow(val tiles: List<Tile>) {
+data class PuzzleRow(val tiles: List<Tile>) {
     val size = tiles.size
 }
 
