@@ -1,6 +1,5 @@
 package org.gamezeug.digitspuzzle.domain
 
-import com.soywiz.klogger.Logger
 import com.soywiz.korio.async.async
 import com.soywiz.korio.async.runBlockingNoSuspensions
 import com.soywiz.korio.file.std.resourcesVfs
