@@ -62,6 +62,7 @@ class PuzzlePiece(val name: String, val area: PuzzleArea) {
  */
 object PuzzlePieceFactory {
 
+    fun build0(): PuzzlePiece = buildDigit('0')
     fun build1(): PuzzlePiece = buildDigit('1')
     fun build2(): PuzzlePiece = buildDigit('2')
     fun build3(): PuzzlePiece = buildDigit('3')
@@ -70,6 +71,7 @@ object PuzzlePieceFactory {
     fun build6(): PuzzlePiece = buildDigit('6')
     fun build7(): PuzzlePiece = buildDigit('7')
     fun build8(): PuzzlePiece = buildDigit('8')
+    fun build9(): PuzzlePiece = buildFromFile('9', "puzzlePieces/6.csv").rotate180Degrees()
 
     private fun buildDigit(digitChar: Char) = buildFromFile(digitChar, "puzzlePieces/$digitChar.csv")
 

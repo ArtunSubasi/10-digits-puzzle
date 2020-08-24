@@ -6,6 +6,31 @@ import kotlin.test.assertEquals
 class PuzzlePieceTest {
 
     @Test
+    fun build0() {
+        val expected = """
+            [   ][ 0 ][   ]
+            [  0][0 0][0  ]
+            [ 0 ][ 0 ][ 0 ]
+            [ 0 ][   ][ 0 ]
+            [0 0][   ][0 0]
+            [ 0 ][   ][ 0 ]
+            [ 0 ][   ][ 0 ]
+            [   ][   ][  0]
+            [   ][   ][ 0 ]
+            [ 0 ][   ][ 0 ]
+            [0 0][   ][0 0]
+            [ 0 ][   ][ 0 ]
+            [ 0 ][ 0 ][ 0 ]
+            [  0][0 0][0  ]
+            [   ][ 0 ][   ]
+        """.trimIndent()
+        val puzzlePiece = PuzzlePieceFactory.build0()
+
+        assertEquals("0", puzzlePiece.name)
+        assertEquals(expected, puzzlePiece.toString())
+    }
+
+    @Test
     fun build1() {
         val expected = """
             [   ]
@@ -209,6 +234,30 @@ class PuzzlePieceTest {
         assertEquals(expected, puzzlePiece.toString())
     }
 
+    @Test
+    fun build9() {
+        val expected = """
+            [   ][ 9 ][   ]
+            [  9][9 9][9  ]
+            [ 9 ][ 9 ][ 9 ]
+            [ 9 ][   ][ 9 ]
+            [9 9][   ][9 9]
+            [ 9 ][   ][ 9 ]
+            [ 9 ][ 9 ][ 9 ]
+            [  9][9 9][9  ]
+            [   ][ 9 ][ 9 ]
+            [   ][   ][ 9 ]
+            [   ][   ][9 9]
+            [   ][   ][ 9 ]
+            [   ][ 9 ][ 9 ]
+            [  9][9 9][9  ]
+            [   ][ 9 ][   ]
+        """.trimIndent()
+        val puzzlePiece = PuzzlePieceFactory.build9()
+
+        assertEquals("9", puzzlePiece.name)
+        assertEquals(expected, puzzlePiece.toString())
+    }
 
     @Test
     fun buildFromFile() {
