@@ -1,6 +1,6 @@
 package org.gamezeug.digitspuzzle.domain
 
-class PuzzleState(
+data class PuzzleState(
         val area: PuzzleArea,
         val availablePieces: List<PuzzlePiece>,
         val moves: List<Move> = listOf(),

@@ -5,7 +5,7 @@ import com.soywiz.korio.async.runBlockingNoSuspensions
 import com.soywiz.korio.file.std.resourcesVfs
 import kotlinx.coroutines.GlobalScope
 
-class PuzzlePiece(val name: String, val area: PuzzleArea) {
+data class PuzzlePiece(val name: String, val area: PuzzleArea) {
 
     fun rotateBy(rotation: Rotation): PuzzlePiece {
         return when (rotation) {

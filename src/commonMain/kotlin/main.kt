@@ -6,7 +6,10 @@ import com.soywiz.korim.color.*
 import com.soywiz.korim.vector.*
 import com.soywiz.korma.geom.vector.*
 import org.gamezeug.digitspuzzle.application.PiecePlacementUseCase
+import org.gamezeug.digitspuzzle.application.SolvePuzzleObserver
+import org.gamezeug.digitspuzzle.application.SolvePuzzleUseCase
 import org.gamezeug.digitspuzzle.domain.*
+import kotlinx.coroutines.*
 
 suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444"]) {
 
@@ -37,11 +40,25 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 	println("tileWidth: $tileWidth, tileHeight: $tileHeight")
 	val tilePrinter = TilePrinter(this, tileWidth, tileHeight)
 
-	for ((rowIndex, row) in puzzleState.area.rows.withIndex()) {
-		for ((colIndex, tile) in row.tiles.withIndex()) {
-			tilePrinter.printGrids(colIndex, rowIndex)
-			tilePrinter.printTile(colIndex, rowIndex, tile)
+	val observer = object : SolvePuzzleObserver {
+		var stateCounter: Long = 0
+		override fun newStateFound(state: PuzzleState) {
+			if (state.usedPieces.size >= 8 && stateCounter > 10000L) {
+				stateCounter = 0
+				tilePrinter.clear()
+				for ((rowIndex, row) in state.area.rows.withIndex()) {
+					for ((colIndex, tile) in row.tiles.withIndex()) {
+						tilePrinter.printGrids(colIndex, rowIndex)
+						tilePrinter.printTile(colIndex, rowIndex, tile)
+					}
+				}
+			}
+			stateCounter++
 		}
+	}
+
+	GlobalScope.launch { // launch a new coroutine in background and continue
+		SolvePuzzleUseCase(observer).solvePuzzle(puzzleState)
 	}
 
 	onKeyDown {
@@ -101,77 +118,88 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 }
 
 class TilePrinter(private val parent: Container, private val tileWidth: Double, private val tileHeight: Double) {
-	fun printGrids(x: Int, y: Int) {
-		parent.graphics {
+
+	private var graphics: Graphics = initGraphics()
+
+	// TODO this looks like a hack. Find out how to clear the graphics without removing and creating a new one.
+	fun clear() {
+		parent.removeChild(graphics)
+		graphics.close()
+		graphics = initGraphics()
+	}
+
+	private fun initGraphics(): Graphics {
+		return parent.graphics {
 			useNativeRendering = false
-			val x0: Double = x * tileWidth
-			val y0: Double = y * tileHeight
-			val x1: Double = x0 + tileWidth
-			val y1: Double = y0 + tileHeight
-			stroke(Colors["#333333"], Context2d.StrokeInfo(thickness = 2.0)) {
-				rect(x0, y0, tileWidth, tileHeight)
-			}
-			stroke(Colors["#333333"], Context2d.StrokeInfo(thickness = 1.0)) {
-				line(x0, y0, x1, y1)
-				line(x1, y0, x0, y1)
-			}
+		}
+	}
+
+	fun printGrids(x: Int, y: Int) {
+		val x0: Double = x * tileWidth
+		val y0: Double = y * tileHeight
+		val x1: Double = x0 + tileWidth
+		val y1: Double = y0 + tileHeight
+		graphics.stroke(Colors["#333333"], Context2d.StrokeInfo(thickness = 2.0)) {
+			rect(x0, y0, tileWidth, tileHeight)
+		}
+		graphics.stroke(Colors["#333333"], Context2d.StrokeInfo(thickness = 1.0)) {
+			line(x0, y0, x1, y1)
+			line(x1, y0, x0, y1)
 		}
 	}
 
 	fun printTile(x: Int, y: Int, tile: Tile) {
-		parent.graphics {
-			useNativeRendering = false
-			val x0: Double = x * tileWidth
-			val y0: Double = y * tileHeight
-			val x1: Double = x0 + tileWidth
-			val y1: Double = y0 + tileHeight
-			val xCenter: Double = x0 + (tileWidth / 2)
-			val yCenter: Double = y0 + (tileHeight / 2)
-			if (tile.leftSegment != ' ') {
-				fill(chooseSegmentColor(tile.leftSegment)) {
-					line(x0, y0, xCenter, yCenter)
-					lineTo(x0, y1)
-					lineTo(x0, y0)
-				}
+		val x0: Double = x * tileWidth
+		val y0: Double = y * tileHeight
+		val x1: Double = x0 + tileWidth
+		val y1: Double = y0 + tileHeight
+		val xCenter: Double = x0 + (tileWidth / 2)
+		val yCenter: Double = y0 + (tileHeight / 2)
+
+		if (tile.leftSegment != ' ') {
+			graphics.fill(chooseSegmentColor(tile.leftSegment)) {
+				line(x0, y0, xCenter, yCenter)
+				lineTo(x0, y1)
+				lineTo(x0, y0)
 			}
-			if (tile.topSegment != ' ') {
-				fill(chooseSegmentColor(tile.topSegment)) {
-					line(x0, y0, x1, y0)
-					lineTo(xCenter, yCenter)
-					lineTo(x0, y0)
-				}
+		}
+		if (tile.topSegment != ' ') {
+			graphics.fill(chooseSegmentColor(tile.topSegment)) {
+				line(x0, y0, x1, y0)
+				lineTo(xCenter, yCenter)
+				lineTo(x0, y0)
 			}
-			if (tile.rightSegment != ' ') {
-				fill(chooseSegmentColor(tile.rightSegment)) {
-					line(x1, y0, xCenter, yCenter)
-					lineTo(x1, y1)
-					lineTo(x1, y0)
-				}
+		}
+		if (tile.rightSegment != ' ') {
+			graphics.fill(chooseSegmentColor(tile.rightSegment)) {
+				line(x1, y0, xCenter, yCenter)
+				lineTo(x1, y1)
+				lineTo(x1, y0)
 			}
-			if (tile.bottomSegment != ' ') {
-				fill(chooseSegmentColor(tile.bottomSegment)) {
-					line(x0, y1, x1, y1)
-					lineTo(xCenter, yCenter)
-					lineTo(x0, y1)
-				}
+		}
+		if (tile.bottomSegment != ' ') {
+			graphics.fill(chooseSegmentColor(tile.bottomSegment)) {
+				line(x0, y1, x1, y1)
+				lineTo(xCenter, yCenter)
+				lineTo(x0, y1)
 			}
 		}
 	}
 
 	private fun chooseSegmentColor(segmentChar: Char): RGBA {
 		return when (segmentChar) {
-			'0' -> Colors["#000000"]
-			'1' -> Colors["#111111"]
-			'2' -> Colors["#222222"]
-			'3' -> Colors["#333333"]
-			'4' -> Colors["#444444"]
-			'5' -> Colors["#555555"]
-			'6' -> Colors["#666666"]
-			'7' -> Colors["#777777"]
-			'8' -> Colors["#888888"]
-			'9' -> Colors["#999999"]
-			'X' -> Colors["#FFFFFF"]
-			else -> Colors.RED
+			'0' -> Colors["#FF0000"]
+			'1' -> Colors["#FF7F00"]
+			'2' -> Colors["#FFFF00"]
+			'3' -> Colors["#7FFF00"]
+			'4' -> Colors["#00FFFF"]
+			'5' -> Colors["#007FFF"]
+			'6' -> Colors["#0000FF"]
+			'7' -> Colors["#7F00FF"]
+			'8' -> Colors["#FF00FF"]
+			'9' -> Colors["#FF07FF"]
+			'X' -> Colors["#000000"]
+			else -> Colors["#FFFFFF"]
 		}
 	}
 }

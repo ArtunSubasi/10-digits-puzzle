@@ -1,8 +1,9 @@
 package org.gamezeug.digitspuzzle.application
 
+import com.soywiz.kmem.isEven
 import org.gamezeug.digitspuzzle.domain.*
 
-class SolvePuzzleUseCase {
+class SolvePuzzleUseCase(private val observer: SolvePuzzleObserver? = null) {
 
     private val piecePlacementUseCase = PiecePlacementUseCase()
     private var triedMoves: Long = 0
@@ -18,14 +19,11 @@ class SolvePuzzleUseCase {
             println(state)
             return state
         }
-        println("Trying to solve a puzzle with ${state.availablePieces.size} available pieces. Move $triedMoves")
-        if (triedMoves % 1000L == 0L) {
-            println(state)
-        }
         val availableValidMoves = getAvailableValidMoves(state)
         for (move in availableValidMoves) {
             val newState = piecePlacementUseCase.placePiece(move, state)
             triedMoves++
+            observer?.newStateFound(newState)
             val potentiallySolvedPuzzle = solvePuzzle(newState)
             if (potentiallySolvedPuzzle != null) {
                 return potentiallySolvedPuzzle
@@ -51,20 +49,25 @@ class SolvePuzzleUseCase {
                 }
             }
         }
-        if (availableValidMoves.size > 0) {
-            println("Found ${availableValidMoves.size} valid moves!")
-        }
         return availableValidMoves.toList()
     }
 
     private fun getAvailableCoordinates(state: PuzzleState): Set<PuzzleAreaCoordinate> {
         val availableCoordinates = mutableSetOf<PuzzleAreaCoordinate>()
         for (y in 0 until state.area.numberOfRows) {
-            for (x in 0 until state.area.numberOfColumns) {
-                availableCoordinates.add(PuzzleAreaCoordinate(x, y))
+            if (y.isEven) {
+                for (x in 0 until state.area.numberOfColumns) {
+                    if (x.isEven) {
+                        availableCoordinates.add(PuzzleAreaCoordinate(x, y))
+                    }
+                }
             }
         }
         return availableCoordinates
     }
 
+}
+
+interface SolvePuzzleObserver {
+    fun newStateFound(state: PuzzleState)
 }
