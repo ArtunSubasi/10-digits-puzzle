@@ -70,12 +70,11 @@ data class Tile(
 
 object TileFactory {
     fun createFromTileDescription(tileDescription: String, charToPrint: Char): Tile {
-        var left = ' '; var top = ' '; var right = ' '; var bottom = ' '
         if (tileDescription.contains("F")) return fullTile(charToPrint)
-        if (tileDescription.contains("L")) left = charToPrint
-        if (tileDescription.contains("T")) top = charToPrint
-        if (tileDescription.contains("R")) right = charToPrint
-        if (tileDescription.contains("B")) bottom = charToPrint
+        val left = if (tileDescription.contains("L")) charToPrint else ' '
+        val top = if (tileDescription.contains("T")) charToPrint else ' '
+        val right = if (tileDescription.contains("R")) charToPrint else ' '
+        val bottom = if (tileDescription.contains("B")) charToPrint else ' '
         return Tile(left, top, right, bottom)
     }
 }
