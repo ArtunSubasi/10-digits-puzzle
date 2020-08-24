@@ -1,5 +1,6 @@
 package org.gamezeug.digitspuzzle.domain
 
+import com.soywiz.klogger.Logger
 import com.soywiz.korio.async.async
 import com.soywiz.korio.async.runBlockingNoSuspensions
 import com.soywiz.korio.file.std.resourcesVfs
@@ -63,6 +64,8 @@ object PuzzlePieceFactory {
 
     fun build1(): PuzzlePiece = buildDigit('1')
     fun build2(): PuzzlePiece = buildDigit('2')
+    fun build3(): PuzzlePiece = buildDigit('3')
+    fun build4(): PuzzlePiece = buildDigit('4')
     private fun buildDigit(digitChar: Char) = buildFromFile(digitChar, "puzzlePieces/$digitChar.csv")
 
     fun buildFromFile(charToPrint: Char, filePath: String): PuzzlePiece {
@@ -78,7 +81,9 @@ object PuzzlePieceFactory {
                     .toList()
             rows.add(PuzzleRow(tiles))
         }
-        return PuzzlePiece(charToPrint.toString(), PuzzleArea(rows))
+        val puzzlePiece = PuzzlePiece(charToPrint.toString(), PuzzleArea(rows))
+        println("Puzzle piece created:\n $puzzlePiece")
+        return puzzlePiece
     }
 
 }
