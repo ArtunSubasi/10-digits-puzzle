@@ -17,8 +17,16 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 	var rotationNo = 0
 	var mirrorNo: Int
 	val pieces = mapOf(
+			0 to PuzzlePieceFactory.build0(),
 			1 to PuzzlePieceFactory.build1(),
-			2 to PuzzlePieceFactory.build2()
+			2 to PuzzlePieceFactory.build2(),
+			3 to PuzzlePieceFactory.build3(),
+			4 to PuzzlePieceFactory.build4(),
+			5 to PuzzlePieceFactory.build5(),
+			6 to PuzzlePieceFactory.build6(),
+			7 to PuzzlePieceFactory.build7(),
+			8 to PuzzlePieceFactory.build8(),
+			9 to PuzzlePieceFactory.build9()
 	)
 	val puzzleState = PuzzleStateFactory.createInitialPuzzleState(pieces.values.toMutableList())
 
@@ -119,28 +127,51 @@ class TilePrinter(private val parent: Container, private val tileWidth: Double, 
 			val y1: Double = y0 + tileHeight
 			val xCenter: Double = x0 + (tileWidth / 2)
 			val yCenter: Double = y0 + (tileHeight / 2)
-			fill(Colors.WHITE) {
-				if (tile.leftSegment != ' ') {
+			if (tile.leftSegment != ' ') {
+				fill(chooseSegmentColor(tile.leftSegment)) {
 					line(x0, y0, xCenter, yCenter)
 					lineTo(x0, y1)
 					lineTo(x0, y0)
 				}
-				if (tile.topSegment != ' ') {
+			}
+			if (tile.topSegment != ' ') {
+				fill(chooseSegmentColor(tile.topSegment)) {
 					line(x0, y0, x1, y0)
 					lineTo(xCenter, yCenter)
 					lineTo(x0, y0)
 				}
-				if (tile.rightSegment != ' ') {
+			}
+			if (tile.rightSegment != ' ') {
+				fill(chooseSegmentColor(tile.rightSegment)) {
 					line(x1, y0, xCenter, yCenter)
 					lineTo(x1, y1)
 					lineTo(x1, y0)
 				}
-				if (tile.bottomSegment != ' ') {
+			}
+			if (tile.bottomSegment != ' ') {
+				fill(chooseSegmentColor(tile.bottomSegment)) {
 					line(x0, y1, x1, y1)
 					lineTo(xCenter, yCenter)
 					lineTo(x0, y1)
 				}
 			}
+		}
+	}
+
+	private fun chooseSegmentColor(segmentChar: Char): RGBA {
+		return when (segmentChar) {
+			'0' -> Colors["#000000"]
+			'1' -> Colors["#111111"]
+			'2' -> Colors["#222222"]
+			'3' -> Colors["#333333"]
+			'4' -> Colors["#444444"]
+			'5' -> Colors["#555555"]
+			'6' -> Colors["#666666"]
+			'7' -> Colors["#777777"]
+			'8' -> Colors["#888888"]
+			'9' -> Colors["#999999"]
+			'X' -> Colors["#FFFFFF"]
+			else -> Colors.RED
 		}
 	}
 }
