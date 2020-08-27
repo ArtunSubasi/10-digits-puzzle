@@ -1,10 +1,5 @@
 package org.gamezeug.digitspuzzle.domain
 
-import com.soywiz.korio.async.async
-import com.soywiz.korio.async.runBlockingNoSuspensions
-import com.soywiz.korio.file.std.resourcesVfs
-import kotlinx.coroutines.GlobalScope
-
 /**
  * An immutable tiled area consisting of rows and columns.
  */
@@ -129,14 +124,9 @@ object PuzzleAreaFactory {
     private fun buildBottomLeftTile() = Tile(bottomSegment = 'X', leftSegment = 'X')
     private fun buildBottomRightTile() = Tile(bottomSegment = 'X', rightSegment = 'X')
 
-    fun buildFromFile(charToPrint: Char, filePath: String): PuzzleArea {
-        val file = resourcesVfs[filePath]
-        val deferred = GlobalScope.async { file.readLines() }
-        val lines = runBlockingNoSuspensions {
-            deferred.await()
-        }
+    fun buildFromCsv(charToPrint: Char, csv: String): PuzzleArea {
         val rows = mutableListOf<PuzzleRow>()
-        for (line in lines) {
+        for (line in csv.lines()) {
             val tiles = line.split(",")
                     .map { TileFactory.createFromTileDescription(it, charToPrint) }
                     .toList()

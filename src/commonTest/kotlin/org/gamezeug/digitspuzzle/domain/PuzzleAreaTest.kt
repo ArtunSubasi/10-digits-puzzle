@@ -7,6 +7,13 @@ import kotlin.test.assertTrue
 
 class PuzzleAreaTest {
 
+    private val csvBlankArea = """
+            B   ,   ,BR  ,F   ,LB
+            F   ,   ,F   ,    ,F
+            TR  ,F  ,LT  ,    ,T
+            """.trimIndent()
+    private val testArea = PuzzleAreaFactory.buildFromCsv('X', csvBlankArea)
+
     @Test
     fun `area 1x1`() {
         val expected = """
@@ -118,8 +125,7 @@ class PuzzleAreaTest {
 
     @Test
     fun `getBlankAreaMap for 5x3`() {
-        val area = PuzzleAreaFactory.buildFromFile('X', "blankAreaTest.csv")
-        val blankAreaMap = area.getBlankAreaMap()
+        val blankAreaMap = testArea.getBlankAreaMap()
         assertEquals(4, blankAreaMap[PuzzleAreaCoordinate(0, 0)])
         assertEquals(1, blankAreaMap[PuzzleAreaCoordinate(0, 2)])
         assertEquals(1, blankAreaMap[PuzzleAreaCoordinate(4, 0)])
@@ -129,8 +135,7 @@ class PuzzleAreaTest {
 
     @Test
     fun `getNumberOfFilledTiles for 5x3`() {
-        val area = PuzzleAreaFactory.buildFromFile('X', "blankAreaTest.csv")
-        assertEquals(11, area.getNumberOfFilledTiles())
+        assertEquals(11, testArea.getNumberOfFilledTiles())
     }
 
 }
