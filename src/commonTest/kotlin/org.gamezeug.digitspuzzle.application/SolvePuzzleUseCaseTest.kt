@@ -5,17 +5,16 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
+@ExperimentalStdlibApi
 class SolvePuzzleUseCaseTest {
 
     @Test
     fun `solvePuzzle small`() {
         val pieces = listOf(
-                PuzzlePieceFactory.build2(),
-                PuzzlePieceFactory.build0(),
-                PuzzlePieceFactory.build1(),
-                PuzzlePieceFactory.build1()
+                PuzzlePieceFactory.build3(),
+                PuzzlePieceFactory.build8()
         )
-        val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(7, 5)
+        val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 5)
         val puzzleState = PuzzleState(initialArea, pieces)
 
         // When

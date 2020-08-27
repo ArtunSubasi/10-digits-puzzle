@@ -1,6 +1,10 @@
 package org.gamezeug.digitspuzzle.application
 
 import com.soywiz.kmem.isEven
+import com.soywiz.korio.async.async
+import com.soywiz.korio.async.runBlockingNoSuspensions
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import org.gamezeug.digitspuzzle.domain.*
 
 class SolvePuzzleUseCase(private val observer: SolvePuzzleObserver? = null) {
@@ -11,25 +15,50 @@ class SolvePuzzleUseCase(private val observer: SolvePuzzleObserver? = null) {
     /**
      * Places all pieces in a valid way so that all available pieces are used.
      */
+    @ExperimentalStdlibApi
     fun solvePuzzle(state: PuzzleState): PuzzleState? {
-        if (state.availablePieces.isEmpty()) {
-            println("==================")
-            println("Solved the puzzle!")
-            println("==================")
-            println(state)
-            return state
-        }
-        val availableValidMoves = getAvailableValidMoves(state)
-        for (move in availableValidMoves) {
-            val newState = piecePlacementUseCase.placePiece(move, state)
+        val statesToCheck = mutableListOf(state)
+        while (statesToCheck.isNotEmpty()) {
             triedMoves++
-            observer?.newStateFound(newState)
-            val potentiallySolvedPuzzle = solvePuzzle(newState)
-            if (potentiallySolvedPuzzle != null) {
-                return potentiallySolvedPuzzle
+            val lastState = statesToCheck.removeLast()
+            observer?.newStateFound(lastState)
+            if (triedMoves % 10_000L == 0L) {
+                println("Tried $triedMoves puzzle states. Number of states to check: ${statesToCheck.size}")
             }
+            if (lastState.availablePieces.isEmpty()) { // TODO apply some DDD principles here. This is an end game check!
+                println("==================")
+                println("Solved the puzzle!")
+                println("by trying $triedMoves puzzle states")
+                println("==================")
+                println(lastState)
+                return lastState
+            }
+
+            if (shouldContinueSolvingPuzzle(lastState)) {
+                val availableValidMoves = getAvailableValidMoves(lastState)
+                runBlockingNoSuspensions {
+                    statesToCheck.addAll(availableValidMoves.pmap { piecePlacementUseCase.placePiece(it, lastState) })
+                }
+            }
+
+            // TODO how to get rid of the 1 & 7 problem?
+
         }
         return null
+    }
+
+    /**
+     * Check if it makes sense to continue solving this puzzle state.
+     */
+    private fun shouldContinueSolvingPuzzle(lastState: PuzzleState): Boolean {
+        // Break if the puzzle contains a blank area which is too small for the smallest piece
+        val areaOfSmallestPiece = lastState.availablePieces.map { it.area.getNumberOfFilledTiles() }.min()!!
+        val tooSmallBlankArea = lastState.area.getBlankAreaMap().values.find { it in 2..areaOfSmallestPiece }
+        return tooSmallBlankArea == null
+    }
+
+    private suspend fun <A, B> Iterable<A>.pmap(f: suspend (A) -> B): List<B> = coroutineScope {
+        map { async { f(it) } }.awaitAll()
     }
 
     /**

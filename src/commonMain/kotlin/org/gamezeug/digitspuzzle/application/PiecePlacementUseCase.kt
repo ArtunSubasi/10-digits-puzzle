@@ -2,6 +2,7 @@ package org.gamezeug.digitspuzzle.application
 
 import org.gamezeug.digitspuzzle.domain.*
 
+// TODO this use case should be moved to the domain of the PuzzleState
 class PiecePlacementUseCase {
 
     fun isValidPiecePlacement(move: Move, state: PuzzleState): Boolean {

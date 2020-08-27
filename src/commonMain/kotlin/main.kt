@@ -1,40 +1,28 @@
-import com.soywiz.korev.Key
-import com.soywiz.korge.*
-import com.soywiz.korge.input.*
+import com.soywiz.korge.Korge
 import com.soywiz.korge.view.*
-import com.soywiz.korim.color.*
-import com.soywiz.korim.vector.*
-import com.soywiz.korma.geom.vector.*
-import org.gamezeug.digitspuzzle.application.PiecePlacementUseCase
+import com.soywiz.korim.color.Colors
+import com.soywiz.korim.color.RGBA
+import com.soywiz.korim.vector.Context2d
+import com.soywiz.korma.geom.vector.line
+import com.soywiz.korma.geom.vector.rect
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.gamezeug.digitspuzzle.application.SolvePuzzleObserver
 import org.gamezeug.digitspuzzle.application.SolvePuzzleUseCase
-import org.gamezeug.digitspuzzle.domain.*
-import kotlinx.coroutines.*
+import org.gamezeug.digitspuzzle.domain.PuzzlePieceFactory
+import org.gamezeug.digitspuzzle.domain.PuzzleState
+import org.gamezeug.digitspuzzle.domain.PuzzleStateFactory
+import org.gamezeug.digitspuzzle.domain.Tile
 
+/*
+TODO this main method was used by the Korge example project.
+Refactor this class after figuring out how Korge works and can be structured.
+ */
+@ExperimentalStdlibApi
 suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444"]) {
 
-	var inputState = InputState.SELECT_PIECE
-	var pieceNo = 0
-	var x = 0
-	var y = 0
-	var rotationNo = 0
-	var mirrorNo: Int
-	val pieces = mapOf(
-			0 to PuzzlePieceFactory.build0(),
-			1 to PuzzlePieceFactory.build1(),
-			2 to PuzzlePieceFactory.build2(),
-			3 to PuzzlePieceFactory.build3(),
-			4 to PuzzlePieceFactory.build4(),
-			5 to PuzzlePieceFactory.build5(),
-			6 to PuzzlePieceFactory.build6(),
-			7 to PuzzlePieceFactory.build7(),
-			8 to PuzzlePieceFactory.build8(),
-			9 to PuzzlePieceFactory.build9()
-	)
-	var puzzleState = PuzzleStateFactory.createInitialPuzzleState(pieces.values.toList())
-
-	println("Piece: $pieceNo, X: $x, Y: $y, Next action: $inputState")
-
+	val pieces = PuzzlePieceFactory.buildAll()
+	val puzzleState = PuzzleStateFactory.createInitialPuzzleState(pieces)
 	val tileWidth: Double = width / puzzleState.area.numberOfColumns
 	val tileHeight: Double = height / puzzleState.area.numberOfRows
 	println("tileWidth: $tileWidth, tileHeight: $tileHeight")
@@ -43,16 +31,14 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 	val observer = object : SolvePuzzleObserver {
 		var stateCounter: Long = 0
 		override fun newStateFound(state: PuzzleState) {
-			if (state.usedPieces.size >= 8 && stateCounter > 10000L) {
-				stateCounter = 0
 				tilePrinter.clear()
 				for ((rowIndex, row) in state.area.rows.withIndex()) {
 					for ((colIndex, tile) in row.tiles.withIndex()) {
 						tilePrinter.printGrids(colIndex, rowIndex)
 						tilePrinter.printTile(colIndex, rowIndex, tile)
+						tilePrinter.printStates(stateCounter)
 					}
 				}
-			}
 			stateCounter++
 		}
 	}
@@ -60,72 +46,22 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 	GlobalScope.launch { // launch a new coroutine in background and continue
 		SolvePuzzleUseCase(observer).solvePuzzle(puzzleState)
 	}
-
-	onKeyDown {
-		when (inputState) {
-			InputState.SELECT_PIECE -> {
-				pieceNo = getIntFromKey(it.key)
-				inputState = InputState.SELECT_X
-			}
-			InputState.SELECT_X -> {
-				x = getIntFromKey(it.key)
-				inputState = InputState.SELECT_Y
-			}
-			InputState.SELECT_Y -> {
-				y = getIntFromKey(it.key)
-				inputState = InputState.SELECT_ROTATION
-			}
-			InputState.SELECT_ROTATION -> {
-				rotationNo = getIntFromKey(it.key)
-				inputState = InputState.SELECT_MIRROR
-			}
-			InputState.SELECT_MIRROR -> {
-				mirrorNo = getIntFromKey(it.key)
-				inputState = InputState.SELECT_PIECE
-
-				val rotation = when (rotationNo) {
-					1 -> Rotation.ROTATE_90_DEGREES_CLOCKWISE
-					2 -> Rotation.ROTATE_180_DEGREES
-					3 -> Rotation.ROTATE_270_DEGREES_CLOCKWISE
-					else -> Rotation.NO_ROTATION
-				}
-				val mirroring = if (mirrorNo == 1) Mirroring.MIRROR_HORIZONTALLY else Mirroring.NO_MIRRORING
-
-				val move = Move(
-						coordinate = PuzzleAreaCoordinate(x, y),
-						piece = pieces.getValue(pieceNo),
-						rotation = rotation,
-						mirroring = mirroring
-				)
-				val piecePlacementUseCase = PiecePlacementUseCase()
-
-				if (piecePlacementUseCase.isValidPiecePlacement(move, puzzleState)) {
-					puzzleState = piecePlacementUseCase.placePiece(move, puzzleState)
-				} else {
-					println("not a valid move!")
-				}
-
-				// re-render all
-				for ((rowIndex, row) in puzzleState.area.rows.withIndex()) {
-					for ((colIndex, tile) in row.tiles.withIndex()) {
-						tilePrinter.printTile(colIndex, rowIndex, tile)
-					}
-				}
-			}
-		}
-		println("Piece: $pieceNo, X: $x, Y: $y, Next action: $inputState")
-	}
 }
 
 class TilePrinter(private val parent: Container, private val tileWidth: Double, private val tileHeight: Double) {
 
 	private var graphics: Graphics = initGraphics()
+	private var text = parent.text("") {
+		position(10, 10)
+	}
 
 	// TODO this looks like a hack. Find out how to clear the graphics without removing and creating a new one.
 	fun clear() {
 		parent.removeChild(graphics)
 		graphics.close()
 		graphics = initGraphics()
+		parent.removeChild(text)
+		parent.addChild(text)
 	}
 
 	private fun initGraphics(): Graphics {
@@ -197,33 +133,13 @@ class TilePrinter(private val parent: Container, private val tileWidth: Double, 
 			'6' -> Colors["#0000FF"]
 			'7' -> Colors["#7F00FF"]
 			'8' -> Colors["#FF00FF"]
-			'9' -> Colors["#FF07FF"]
+			'9' -> Colors["#FF7FFF"]
 			'X' -> Colors["#000000"]
 			else -> Colors["#FFFFFF"]
 		}
 	}
-}
 
-enum class InputState {
-	SELECT_PIECE,
-	SELECT_X,
-	SELECT_Y,
-	SELECT_ROTATION,
-	SELECT_MIRROR
-}
-
-private fun getIntFromKey(key: Key): Int {
-	return when (key) {
-		Key.N0 -> 0
-		Key.N1 -> 1
-		Key.N2 -> 2
-		Key.N3 -> 3
-		Key.N4 -> 4
-		Key.N5 -> 5
-		Key.N6 -> 6
-		Key.N7 -> 7
-		Key.N8 -> 8
-		Key.N9 -> 9
-		else -> 0
+	fun printStates(stateCounter: Long) {
+		text.text = stateCounter.toString()
 	}
 }

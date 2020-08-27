@@ -1,10 +1,5 @@
 package org.gamezeug.digitspuzzle.domain
 
-import com.soywiz.korio.async.async
-import com.soywiz.korio.async.runBlockingNoSuspensions
-import com.soywiz.korio.file.std.resourcesVfs
-import kotlinx.coroutines.GlobalScope
-
 data class PuzzlePiece(val name: String, val area: PuzzleArea) {
 
     fun rotateBy(rotation: Rotation): PuzzlePiece {
@@ -72,22 +67,24 @@ object PuzzlePieceFactory {
     fun build8(): PuzzlePiece = buildDigit('8')
     fun build9(): PuzzlePiece = buildFromFile('9', "puzzlePieces/6.csv").rotate180Degrees()
 
+    fun buildAll() = listOf(
+        build0(),
+        build1(),
+        build2(),
+        build3(),
+        build4(),
+        build5(),
+        build6(),
+        build7(),
+        build8(),
+        build9()
+    )
+
     private fun buildDigit(digitChar: Char) = buildFromFile(digitChar, "puzzlePieces/$digitChar.csv")
 
     fun buildFromFile(charToPrint: Char, filePath: String): PuzzlePiece {
-        val file = resourcesVfs[filePath]
-        val deferred = GlobalScope.async { file.readLines() }
-        val lines = runBlockingNoSuspensions {
-            deferred.await()
-        }
-        val rows = mutableListOf<PuzzleRow>()
-        for (line in lines) {
-            val tiles = line.split(",")
-                    .map { TileFactory.createFromTileDescription(it, charToPrint) }
-                    .toList()
-            rows.add(PuzzleRow(tiles))
-        }
-        val puzzlePiece = PuzzlePiece(charToPrint.toString(), PuzzleArea(rows))
+        val area = PuzzleAreaFactory.buildFromFile(charToPrint, filePath)
+        val puzzlePiece = PuzzlePiece(charToPrint.toString(), area)
         println("Puzzle piece created:\n $puzzlePiece")
         return puzzlePiece
     }

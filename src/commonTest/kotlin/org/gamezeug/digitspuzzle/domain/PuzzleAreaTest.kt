@@ -116,4 +116,21 @@ class PuzzleAreaTest {
         assertTrue(containerArea.hasRoomFor(newArea, PuzzleAreaCoordinate(0, 1)))
     }
 
+    @Test
+    fun `getBlankAreaMap for 5x3`() {
+        val area = PuzzleAreaFactory.buildFromFile('X', "blankAreaTest.csv")
+        val blankAreaMap = area.getBlankAreaMap()
+        assertEquals(4, blankAreaMap[PuzzleAreaCoordinate(0, 0)])
+        assertEquals(1, blankAreaMap[PuzzleAreaCoordinate(0, 2)])
+        assertEquals(1, blankAreaMap[PuzzleAreaCoordinate(4, 0)])
+        assertEquals(4, blankAreaMap[PuzzleAreaCoordinate(3, 1)])
+        assertEquals(4, blankAreaMap.size)
+    }
+
+    @Test
+    fun `getNumberOfFilledTiles for 5x3`() {
+        val area = PuzzleAreaFactory.buildFromFile('X', "blankAreaTest.csv")
+        assertEquals(11, area.getNumberOfFilledTiles())
+    }
+
 }

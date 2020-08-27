@@ -98,4 +98,24 @@ class TileTest {
         assertEquals("[ X ]", fullTile().toStringThirdLine())
     }
 
+    @Test
+    fun `emptyTile has empty segments`() {
+        assertTrue(emptyTile().hasAnyEmptySegment())
+        assertTrue(emptyTile().hasEmptyLeftSegment())
+        assertTrue(emptyTile().hasEmptyTopSegment())
+        assertTrue(emptyTile().hasEmptyRightSegment())
+        assertTrue(emptyTile().hasEmptyBottomSegment())
+        assertEquals(4, emptyTile().getNumberOfEmptySegments())
+    }
+
+    @Test
+    fun `fullTile has no empty segments`() {
+        assertFalse(fullTile().hasAnyEmptySegment())
+        assertFalse(fullTile().hasEmptyLeftSegment())
+        assertFalse(fullTile().hasEmptyTopSegment())
+        assertFalse(fullTile().hasEmptyRightSegment())
+        assertFalse(fullTile().hasEmptyBottomSegment())
+        assertEquals(0, fullTile().getNumberOfEmptySegments())
+    }
+
 }

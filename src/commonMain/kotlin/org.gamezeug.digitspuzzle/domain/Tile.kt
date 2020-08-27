@@ -18,18 +18,18 @@ data class Tile(
 ) {
 
     fun isDisjoint(other: Tile): Boolean {
-        return (this.leftSegment == ' ' || other.leftSegment == ' ')
-                && (this.topSegment == ' ' || other.topSegment == ' ')
-                && (this.rightSegment == ' ' || other.rightSegment == ' ')
-                && (this.bottomSegment == ' ' || other.bottomSegment == ' ')
+        return (this.hasEmptyLeftSegment() || other.hasEmptyLeftSegment())
+                && (this.hasEmptyTopSegment() || other.hasEmptyTopSegment())
+                && (this.hasEmptyRightSegment() || other.hasEmptyRightSegment())
+                && (this.hasEmptyBottomSegment() || other.hasEmptyBottomSegment())
     }
 
     fun merge(other: Tile): Tile {
         return Tile(
-                leftSegment = if (this.leftSegment != ' ') this.leftSegment else other.leftSegment,
-                topSegment = if (this.topSegment != ' ') this.topSegment else other.topSegment,
-                rightSegment = if (this.rightSegment != ' ') this.rightSegment else other.rightSegment,
-                bottomSegment = if (this.bottomSegment != ' ') this.bottomSegment else other.bottomSegment
+                leftSegment = if (hasEmptyLeftSegment()) other.leftSegment else this.leftSegment,
+                topSegment = if (hasEmptyTopSegment()) other.topSegment else this.topSegment,
+                rightSegment = if (hasEmptyRightSegment()) other.rightSegment else this.rightSegment,
+                bottomSegment = if (hasEmptyBottomSegment()) other.bottomSegment else this.bottomSegment
         )
     }
 
@@ -49,6 +49,24 @@ data class Tile(
                 rightSegment = leftSegment,
                 bottomSegment = bottomSegment
         )
+    }
+
+    fun hasAnyEmptySegment(): Boolean {
+        return hasEmptyLeftSegment() || hasEmptyTopSegment() || hasEmptyRightSegment() || hasEmptyBottomSegment()
+    }
+    fun hasEmptyLeftSegment() = leftSegment == ' '
+    fun hasEmptyTopSegment() = topSegment == ' '
+    fun hasEmptyRightSegment() = rightSegment == ' '
+    fun hasEmptyBottomSegment() = bottomSegment == ' '
+    fun hasAnyFilledSegment() = getNumberOfEmptySegments() != 4
+
+    fun getNumberOfEmptySegments(): Int {
+        var numberOfEmptySegments = 0
+        if (hasEmptyLeftSegment()) numberOfEmptySegments++
+        if (hasEmptyTopSegment()) numberOfEmptySegments++
+        if (hasEmptyRightSegment()) numberOfEmptySegments++
+        if (hasEmptyBottomSegment()) numberOfEmptySegments++
+        return numberOfEmptySegments
     }
 
     override fun toString(): String {

@@ -1,5 +1,10 @@
 package org.gamezeug.digitspuzzle.domain
 
+import com.soywiz.korio.async.async
+import com.soywiz.korio.async.runBlockingNoSuspensions
+import com.soywiz.korio.file.std.resourcesVfs
+import kotlinx.coroutines.GlobalScope
+
 /**
  * An immutable tiled area consisting of rows and columns.
  */
@@ -21,6 +26,65 @@ data class PuzzleArea(val rows: List<PuzzleRow>) {
         val wideEnough = this.numberOfColumns >= (newArea.numberOfColumns + newAreaCoordinate.x)
         val tallEnough = this.numberOfRows >= (newArea.numberOfRows + newAreaCoordinate.y)
         return wideEnough && tallEnough
+    }
+
+    fun getNumberOfFilledTiles(): Int {
+        var filledTiles = 0
+        for (y in 0 until numberOfRows) {
+            for (x in 0 until numberOfColumns) {
+                if (getTile(x, y).hasAnyFilledSegment()) {
+                    filledTiles++
+                }
+            }
+        }
+        return filledTiles
+    }
+
+    /**
+     * Calculates a map of blank areas of coordinates to the number of tiles containing blank segments.
+     * This is only an approximate implementation.
+     * If a tile contains multiple, not connected blank segments, it still counts.
+     * The coordinate refers to the top left corner of the blank area.
+     * For example, for a is 1x1 area and which contains a tile with three blank segments,
+     * this return would return a map with a single entry "1x1" to "3".
+     */
+    fun getBlankAreaMap(): Map<PuzzleAreaCoordinate, Int> {
+        val foundBlankTiles = mutableSetOf<PuzzleAreaCoordinate>()
+        val blankAreaMap: MutableMap<PuzzleAreaCoordinate, Int> = mutableMapOf()
+        for (y in 0 until numberOfRows) {
+            for (x in 0 until numberOfColumns) {
+                val coordinate = PuzzleAreaCoordinate(x, y)
+                if (!foundBlankTiles.contains(coordinate)) {
+                    val tileNavigator = TileNavigator(this, coordinate)
+                    val blankTiles = mutableSetOf<PuzzleAreaCoordinate>()
+                    fillNeighborBlankTilesRecursive(tileNavigator, blankTiles)
+                    if (blankTiles.isNotEmpty()) {
+                        foundBlankTiles.addAll(blankTiles)
+                        blankAreaMap[coordinate] = blankTiles.size
+                    }
+                }
+            }
+        }
+        return blankAreaMap
+    }
+
+    private fun fillNeighborBlankTilesRecursive(
+            tileNavigator: TileNavigator,
+            blankTiles: MutableSet<PuzzleAreaCoordinate>
+    ) {
+        if (blankTiles.contains(tileNavigator.coordinate) || !tileNavigator.getTile().hasAnyEmptySegment()) {
+            return
+        }
+        blankTiles.add(tileNavigator.coordinate)
+        if (tileNavigator.hasLeftTile()) {
+            fillNeighborBlankTilesRecursive(tileNavigator.left(), blankTiles)
+        }
+        if (tileNavigator.hasBottomTile()) {
+            fillNeighborBlankTilesRecursive(tileNavigator.bottom(), blankTiles)
+        }
+        if (tileNavigator.hasRightTile()) {
+            fillNeighborBlankTilesRecursive(tileNavigator.right(), blankTiles)
+        }
     }
 
     override fun toString(): String {
@@ -64,6 +128,50 @@ object PuzzleAreaFactory {
     private fun buildTopRightTile() = Tile(topSegment = 'X', rightSegment = 'X')
     private fun buildBottomLeftTile() = Tile(bottomSegment = 'X', leftSegment = 'X')
     private fun buildBottomRightTile() = Tile(bottomSegment = 'X', rightSegment = 'X')
+
+    fun buildFromFile(charToPrint: Char, filePath: String): PuzzleArea {
+        val file = resourcesVfs[filePath]
+        val deferred = GlobalScope.async { file.readLines() }
+        val lines = runBlockingNoSuspensions {
+            deferred.await()
+        }
+        val rows = mutableListOf<PuzzleRow>()
+        for (line in lines) {
+            val tiles = line.split(",")
+                    .map { TileFactory.createFromTileDescription(it, charToPrint) }
+                    .toList()
+            rows.add(PuzzleRow(tiles))
+        }
+        return PuzzleArea(rows)
+    }
+}
+
+class TileNavigator(private val area: PuzzleArea, val coordinate: PuzzleAreaCoordinate) {
+    fun hasLeftTile() = coordinate.x > 0
+    fun hasTopTile() = coordinate.y > 0
+    fun hasRightTile() = coordinate.x + 1 < area.numberOfColumns
+    fun hasBottomTile() = coordinate.y + 1 < area.numberOfRows
+    fun getTile() = area.getTile(coordinate.x , coordinate.y)
+    fun left(): TileNavigator {
+        val newCoordinate = PuzzleAreaCoordinate(coordinate.x - 1, coordinate.y)
+        return TileNavigator(area, newCoordinate)
+    }
+    fun top(): TileNavigator {
+        val newCoordinate = PuzzleAreaCoordinate(coordinate.x, coordinate.y - 1)
+        return TileNavigator(area, newCoordinate)
+    }
+    fun right(): TileNavigator {
+        val newCoordinate = PuzzleAreaCoordinate(coordinate.x + 1, coordinate.y)
+        return TileNavigator(area, newCoordinate)
+    }
+    fun bottom(): TileNavigator {
+        val newCoordinate = PuzzleAreaCoordinate(coordinate.x, coordinate.y + 1)
+        return TileNavigator(area, newCoordinate)
+    }
+    fun carriageReturn(): TileNavigator {
+        val newCoordinate = PuzzleAreaCoordinate(0, coordinate.y + 1)
+        return TileNavigator(area, newCoordinate)
+    }
 }
 
 data class PuzzleAreaCoordinate(val x: Int, val y: Int)
