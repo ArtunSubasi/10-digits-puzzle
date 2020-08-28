@@ -36,15 +36,13 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 		var stateCounter: Long = 0
 		val puzzleStartTime = TimeSource.Monotonic.markNow()
 		override fun newStateFound(state: PuzzleState) {
-			stateCounter++
-			val puzzleDuration = puzzleStartTime.elapsedNow()
 			tilePrinter.clear()
+			tilePrinter.printStates(stateCounter++)
+			tilePrinter.printDuration(puzzleStartTime.elapsedNow())
 			for ((rowIndex, row) in state.area.rows.withIndex()) {
 				for ((colIndex, tile) in row.tiles.withIndex()) {
 					tilePrinter.printGrids(colIndex, rowIndex)
 					tilePrinter.printTile(colIndex, rowIndex, tile)
-					tilePrinter.printStates(stateCounter)
-					tilePrinter.printDuration(puzzleDuration)
 				}
 			}
 		}
