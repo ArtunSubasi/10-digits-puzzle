@@ -134,6 +134,22 @@ class PuzzleAreaTest {
     }
 
     @Test
+    fun `getBlankAreaMap breach test`() {
+        val testAreaCsv = """
+            F   ,F  ,LB ,
+            F   ,   ,F  ,
+            T   ,   ,TRB,
+            F   ,   ,F  ,
+            TR  ,F  ,LT ,
+        """.trimIndent()
+        val blankAreaMap = PuzzleAreaFactory.buildFromCsv('X', testAreaCsv).getBlankAreaMap()
+        assertEquals(5, blankAreaMap[PuzzleAreaCoordinate(1, 1)])
+        assertEquals(1, blankAreaMap[PuzzleAreaCoordinate(0, 4)])
+        assertEquals(7, blankAreaMap[PuzzleAreaCoordinate(2, 0)])
+        assertEquals(3, blankAreaMap.size)
+    }
+
+    @Test
     fun `getNumberOfFilledTiles for 5x3`() {
         assertEquals(11, testArea.getNumberOfFilledTiles())
     }

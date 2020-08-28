@@ -71,13 +71,19 @@ data class PuzzleArea(val rows: List<PuzzleRow>) {
             return
         }
         blankTiles.add(tileNavigator.coordinate)
-        if (tileNavigator.hasLeftTile()) {
+        if (tileNavigator.hasLeftTile()
+                && tileNavigator.getTile().hasEmptyLeftSegment()
+                && tileNavigator.left().getTile().hasEmptyRightSegment()) {
             fillNeighborBlankTilesRecursive(tileNavigator.left(), blankTiles)
         }
-        if (tileNavigator.hasBottomTile()) {
+        if (tileNavigator.hasBottomTile()
+                && tileNavigator.getTile().hasEmptyBottomSegment()
+                && tileNavigator.bottom().getTile().hasEmptyTopSegment()) {
             fillNeighborBlankTilesRecursive(tileNavigator.bottom(), blankTiles)
         }
-        if (tileNavigator.hasRightTile()) {
+        if (tileNavigator.hasRightTile()
+                && tileNavigator.getTile().hasEmptyRightSegment()
+                && tileNavigator.right().getTile().hasEmptyLeftSegment()) {
             fillNeighborBlankTilesRecursive(tileNavigator.right(), blankTiles)
         }
     }

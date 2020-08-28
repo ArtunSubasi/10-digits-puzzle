@@ -35,7 +35,7 @@ class SolvePuzzleUseCase(private val observer: SolvePuzzleObserver? = null) {
             }
 
             if (shouldContinueSolvingPuzzle(lastState)) {
-                val availableValidMoves = getAvailableValidMoves(lastState)
+                val availableValidMoves = getAvailableValidMoves(lastState).reversed()
                 runBlockingNoSuspensions {
                     statesToCheck.addAll(availableValidMoves.pmap { piecePlacementUseCase.placePiece(it, lastState) })
                 }
