@@ -13,11 +13,15 @@ import org.gamezeug.digitspuzzle.domain.PuzzlePieceFactory
 import org.gamezeug.digitspuzzle.domain.PuzzleState
 import org.gamezeug.digitspuzzle.domain.PuzzleStateFactory
 import org.gamezeug.digitspuzzle.domain.Tile
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.TimeSource
 
 /*
 TODO this main method was used by the Korge example project.
 Refactor this class after figuring out how Korge works and can be structured.
  */
+@ExperimentalTime
 @ExperimentalStdlibApi
 suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444"]) {
 
@@ -30,16 +34,19 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 
 	val observer = object : SolvePuzzleObserver {
 		var stateCounter: Long = 0
+		val puzzleStartTime = TimeSource.Monotonic.markNow()
 		override fun newStateFound(state: PuzzleState) {
-				tilePrinter.clear()
-				for ((rowIndex, row) in state.area.rows.withIndex()) {
-					for ((colIndex, tile) in row.tiles.withIndex()) {
-						tilePrinter.printGrids(colIndex, rowIndex)
-						tilePrinter.printTile(colIndex, rowIndex, tile)
-						tilePrinter.printStates(stateCounter)
-					}
-				}
 			stateCounter++
+			val puzzleDuration = puzzleStartTime.elapsedNow()
+			tilePrinter.clear()
+			for ((rowIndex, row) in state.area.rows.withIndex()) {
+				for ((colIndex, tile) in row.tiles.withIndex()) {
+					tilePrinter.printGrids(colIndex, rowIndex)
+					tilePrinter.printTile(colIndex, rowIndex, tile)
+					tilePrinter.printStates(stateCounter)
+					tilePrinter.printDuration(puzzleDuration)
+				}
+			}
 		}
 	}
 
@@ -51,8 +58,11 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 class TilePrinter(private val parent: Container, private val tileWidth: Double, private val tileHeight: Double) {
 
 	private var graphics: Graphics = initGraphics()
-	private var text = parent.text("") {
+	private var counterText = parent.text("") {
 		position(10, 10)
+	}
+	private var durationText = parent.text("00:00:00") {
+		position(parent?.width!! - 120, 10) // TODO what is going on here?
 	}
 
 	// TODO this looks like a hack. Find out how to clear the graphics without removing and creating a new one.
@@ -60,8 +70,10 @@ class TilePrinter(private val parent: Container, private val tileWidth: Double, 
 		parent.removeChild(graphics)
 		graphics.close()
 		graphics = initGraphics()
-		parent.removeChild(text)
-		parent.addChild(text)
+		parent.removeChild(counterText)
+		parent.addChild(counterText)
+		parent.removeChild(durationText)
+		parent.addChild(durationText)
 	}
 
 	private fun initGraphics(): Graphics {
@@ -140,6 +152,16 @@ class TilePrinter(private val parent: Container, private val tileWidth: Double, 
 	}
 
 	fun printStates(stateCounter: Long) {
-		text.text = stateCounter.toString()
+		counterText.text = stateCounter.toString()
 	}
+
+	@ExperimentalTime
+	fun printDuration(duration: Duration) {
+		durationText.text = duration.toComponents {
+			hours, minutes, seconds, _
+				-> "${formatTimeComponent(hours)}:${formatTimeComponent(minutes)}:${formatTimeComponent(seconds)}"
+		}
+	}
+
+	private fun formatTimeComponent(timeComponent: Int) = timeComponent.toString().padStart(2, '0')
 }
