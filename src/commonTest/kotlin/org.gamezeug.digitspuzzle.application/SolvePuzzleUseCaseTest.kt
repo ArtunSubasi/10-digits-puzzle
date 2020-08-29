@@ -1,9 +1,7 @@
 package org.gamezeug.digitspuzzle.application
 
 import org.gamezeug.digitspuzzle.domain.*
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
+import kotlin.test.*
 
 @ExperimentalStdlibApi
 class SolvePuzzleUseCaseTest {
@@ -18,25 +16,26 @@ class SolvePuzzleUseCaseTest {
         val puzzleState = PuzzleState(initialArea, pieces)
 
         // When
-        val solvedPuzzleState = SolvePuzzleUseCase().solvePuzzle(puzzleState)!!
+        val solvePuzzleUseCase = SolvePuzzleUseCase(puzzleState)
+        val newPuzzleState = solvePuzzleUseCase.nextState()
 
         // Then
-        assertEquals(listOf(), solvedPuzzleState.availablePieces)
-        assertEquals(pieces.toSet(), solvedPuzzleState.usedPieces.toSet())
+        assertFalse(newPuzzleState.isSolved())
+        assertTrue(solvePuzzleUseCase.hasNextState())
     }
 
     @Test
     fun `solvePuzzle not possible`() {
         // Given
         val pieces = listOf(PuzzlePieceFactory.build0(), PuzzlePieceFactory.build1())
-        val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 3)
+        val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(4, 3)
         val puzzleState = PuzzleState(initialArea, pieces)
 
         // When
-        val solvedPuzzleState = SolvePuzzleUseCase().solvePuzzle(puzzleState)
+        val solvePuzzleUseCase = SolvePuzzleUseCase(puzzleState)
 
         // Then
-        assertNull(solvedPuzzleState)
+        assertFalse(solvePuzzleUseCase.hasNextState())
     }
 
     @Test
@@ -47,7 +46,7 @@ class SolvePuzzleUseCaseTest {
         val state = PuzzleState(initialArea, listOf(piece0))
 
         // When
-        val availableMoves = SolvePuzzleUseCase().getAvailableValidMoves(state)
+        val availableMoves = SolvePuzzleUseCase(state).getAvailableValidMoves(state)
 
         // Then
         val standard = Move(PuzzleAreaCoordinate(0, 0), piece0)

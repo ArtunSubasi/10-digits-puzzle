@@ -7,43 +7,31 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import org.gamezeug.digitspuzzle.domain.*
 
-class SolvePuzzleUseCase(private val observer: SolvePuzzleObserver? = null) {
+// TODO after the changes in this class, the naming is not suitable anymore. Come up with a new name. Make iterable?
+@ExperimentalStdlibApi
+class SolvePuzzleUseCase(initialState: PuzzleState) {
 
     private val piecePlacementUseCase = PiecePlacementUseCase()
-    private var triedMoves: Long = 0
+    private val statesToCheck = mutableListOf(initialState)
+
+    init {
+        nextState()
+    }
+
+    fun hasNextState() = statesToCheck.isNotEmpty()
 
     /**
-     * Places all pieces in a valid way so that all available pieces are used.
+     * Returns the next puzzle state. If this state is solvable, calculates the next states based on that one.
      */
-    @ExperimentalStdlibApi
-    fun solvePuzzle(state: PuzzleState): PuzzleState? {
-        val statesToCheck = mutableListOf(state)
-        while (statesToCheck.isNotEmpty()) {
-            triedMoves++
-            val lastState = statesToCheck.removeLast()
-            observer?.newStateFound(lastState)
-            if (triedMoves % 10_000L == 0L) {
-                println("Tried $triedMoves puzzle states. Number of states to check: ${statesToCheck.size}")
-            }
-            if (lastState.isSolved()) {
-                println("==================")
-                println("Solved the puzzle!")
-                println("by trying $triedMoves puzzle states")
-                println("==================")
-                println(lastState)
-                return lastState
-            }
-
-            if (shouldContinueSolvingPuzzle(lastState)) {
-                val availableValidMoves = getAvailableValidMoves(lastState).reversed()
-                runBlockingNoSuspensions {
-                    statesToCheck.addAll(availableValidMoves.pmap { piecePlacementUseCase.placePiece(it, lastState) })
-                }
+    fun nextState(): PuzzleState {
+        val nextState = statesToCheck.removeLast()
+        if (shouldContinueSolvingPuzzle(nextState)) {
+            val availableValidMoves = getAvailableValidMoves(nextState).reversed()
+            runBlockingNoSuspensions {
+                statesToCheck.addAll(availableValidMoves.pmap { piecePlacementUseCase.placePiece(it, nextState) })
             }
         }
-
-        // We tried all possible states and could not find a solution
-        return null
+        return nextState
     }
 
     /**
@@ -60,6 +48,7 @@ class SolvePuzzleUseCase(private val observer: SolvePuzzleObserver? = null) {
         map { async { f(it) } }.awaitAll()
     }
 
+    // TODO move to PuzzleState
     /**
      * Get all available valid moves without duplicates. Warning: Incoming loop of loops!
      */
@@ -80,6 +69,7 @@ class SolvePuzzleUseCase(private val observer: SolvePuzzleObserver? = null) {
         return availableValidMoves.toList()
     }
 
+    // TODO move to PuzzleArea
     private fun getAvailableCoordinates(state: PuzzleState): Set<PuzzleAreaCoordinate> {
         val availableCoordinates = mutableSetOf<PuzzleAreaCoordinate>()
         for (y in 0 until state.area.numberOfRows) {
@@ -96,6 +86,3 @@ class SolvePuzzleUseCase(private val observer: SolvePuzzleObserver? = null) {
 
 }
 
-interface SolvePuzzleObserver {
-    fun newStateFound(state: PuzzleState)
-}

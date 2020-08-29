@@ -5,12 +5,8 @@ import com.soywiz.korim.color.RGBA
 import com.soywiz.korim.vector.Context2d
 import com.soywiz.korma.geom.vector.line
 import com.soywiz.korma.geom.vector.rect
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import org.gamezeug.digitspuzzle.application.SolvePuzzleObserver
 import org.gamezeug.digitspuzzle.application.SolvePuzzleUseCase
 import org.gamezeug.digitspuzzle.domain.PuzzlePieceFactory
-import org.gamezeug.digitspuzzle.domain.PuzzleState
 import org.gamezeug.digitspuzzle.domain.PuzzleStateFactory
 import org.gamezeug.digitspuzzle.domain.Tile
 import kotlin.time.Duration
@@ -32,14 +28,25 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 	println("tileWidth: $tileWidth, tileHeight: $tileHeight")
 	val tilePrinter = TilePrinter(this, tileWidth, tileHeight)
 
-	val observer = object : SolvePuzzleObserver {
-		var stateCounter: Long = 0
-		val puzzleStartTime = TimeSource.Monotonic.markNow()
-		override fun newStateFound(state: PuzzleState) {
+	val solvePuzzleUseCase = SolvePuzzleUseCase(puzzleState)
+	var stateCounter: Long = 0
+	val puzzleStartTime = TimeSource.Monotonic.markNow()
+	val numberOfStatesToTryEachFrame = 100 // TODO make this modifable in the UI for fun!
+	var lastState = puzzleState
+
+	addUpdater {
+		for (i in 1..numberOfStatesToTryEachFrame) {
+			if (solvePuzzleUseCase.hasNextState() && !lastState.isSolved()) {
+				lastState = solvePuzzleUseCase.nextState()
+				stateCounter++
+			}
+		}
+		if (!lastState.isSolved()) {
+			// TODO this print calls should also be replaced by updaters
 			tilePrinter.clear()
-			tilePrinter.printStates(stateCounter++)
+			tilePrinter.printStates(stateCounter)
 			tilePrinter.printDuration(puzzleStartTime.elapsedNow())
-			for ((rowIndex, row) in state.area.rows.withIndex()) {
+			for ((rowIndex, row) in lastState.area.rows.withIndex()) {
 				for ((colIndex, tile) in row.tiles.withIndex()) {
 					tilePrinter.printGrids(colIndex, rowIndex)
 					tilePrinter.printTile(colIndex, rowIndex, tile)
@@ -48,9 +55,6 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 		}
 	}
 
-	GlobalScope.launch { // launch a new coroutine in background and continue
-		SolvePuzzleUseCase(observer).solvePuzzle(puzzleState)
-	}
 }
 
 class TilePrinter(private val parent: Container, private val tileWidth: Double, private val tileHeight: Double) {
