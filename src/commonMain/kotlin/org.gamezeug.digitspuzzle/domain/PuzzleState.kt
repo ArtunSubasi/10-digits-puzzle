@@ -10,11 +10,11 @@ data class PuzzleState(
     fun isPieceAvailable(move: Move)= availablePieces.contains(move.piece)
 
     fun placePiece(move: Move): PuzzleState {
-        if (!area.isValidPiecePlacement(move)) {
-            TODO("exception handling, use isValidPiecePlacement? move it to another class for testability? do it somewhere else?")
-        }
         if (!isPieceAvailable(move)) {
-            TODO("nope nope nope")
+            throw IllegalArgumentException("The move is not valid. The piece is not available.")
+        }
+        if (!area.isValidPiecePlacement(move)) {
+            throw IllegalArgumentException("The move is not valid. The piece does not fit in.")
         }
         val tileReplacements = mutableListOf<TileReplacement>()
 
