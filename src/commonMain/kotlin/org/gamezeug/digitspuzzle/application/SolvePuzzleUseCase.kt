@@ -11,7 +11,6 @@ import org.gamezeug.digitspuzzle.domain.*
 @ExperimentalStdlibApi
 class SolvePuzzleUseCase(initialState: PuzzleState) {
 
-    private val piecePlacementUseCase = PiecePlacementUseCase()
     private val statesToCheck = mutableListOf(initialState)
 
     init {
@@ -28,7 +27,7 @@ class SolvePuzzleUseCase(initialState: PuzzleState) {
         if (shouldContinueSolvingPuzzle(nextState)) {
             val availableValidMoves = getAvailableValidMoves(nextState).reversed()
             runBlockingNoSuspensions {
-                statesToCheck.addAll(availableValidMoves.pmap { piecePlacementUseCase.placePiece(it, nextState) })
+                statesToCheck.addAll(availableValidMoves.pmap { nextState.placePiece(it) })
             }
         }
         return nextState
