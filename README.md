@@ -6,14 +6,15 @@ https://www.myminifactory.com/object/3d-print-10-digits-puzzle-tricky-number-puz
 * an algorithm which solves the puzzle using backtracking
 * a multiplatform live renderer using the KorGe game engine
 
+### [🎮 Run on Browser 🎮](https://artunsubasi.github.io/10-digits-puzzle/)
+The JavaScript version runs pretty slow and will take a lot of time to find a solution (multiple hours).
+
 # To Dos
-* Fix JavaScript rendering. Currently, rendering does not work in JavaScript
-probably because the algorithm using a while loop and blocks the single JavaScript thread
-* Publish the minified JavaScript files so that the app can be started directly in a browser
 * Tons of refactorings, especially in main.kt
 * Replace println expressions with the KorGe logger
 * Add some pictures and documentation of the domain model to the README
 * Make the puzzle playable using KorGe inputs. This will need new features such a moving a puzzle piece
+* Optimize the algorithm, especially the dead end detection
 
 ## Development
 
