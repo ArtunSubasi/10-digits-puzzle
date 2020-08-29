@@ -1,10 +1,11 @@
-package org.gamezeug.digitspuzzle.application
+package org.gamezeug.digitspuzzle.domain
 
-import org.gamezeug.digitspuzzle.domain.*
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @ExperimentalStdlibApi
-class SolvePuzzleUseCaseTest {
+class PuzzleSolverTest {
 
     @Test
     fun `solvePuzzle small`() {
@@ -16,7 +17,7 @@ class SolvePuzzleUseCaseTest {
         val puzzleState = PuzzleState(initialArea, pieces)
 
         // When
-        val solvePuzzleUseCase = SolvePuzzleUseCase(puzzleState)
+        val solvePuzzleUseCase = PuzzleSolver(puzzleState)
         val newPuzzleState = solvePuzzleUseCase.nextState()
 
         // Then
@@ -32,7 +33,7 @@ class SolvePuzzleUseCaseTest {
         val puzzleState = PuzzleState(initialArea, pieces)
 
         // When
-        val solvePuzzleUseCase = SolvePuzzleUseCase(puzzleState)
+        val solvePuzzleUseCase = PuzzleSolver(puzzleState)
 
         // Then
         assertFalse(solvePuzzleUseCase.hasNextState())

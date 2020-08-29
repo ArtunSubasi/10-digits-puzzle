@@ -5,8 +5,8 @@ import com.soywiz.korim.color.RGBA
 import com.soywiz.korim.vector.Context2d
 import com.soywiz.korma.geom.vector.line
 import com.soywiz.korma.geom.vector.rect
-import org.gamezeug.digitspuzzle.application.SolvePuzzleUseCase
 import org.gamezeug.digitspuzzle.domain.PuzzlePieceFactory
+import org.gamezeug.digitspuzzle.domain.PuzzleSolver
 import org.gamezeug.digitspuzzle.domain.PuzzleStateFactory
 import org.gamezeug.digitspuzzle.domain.Tile
 import kotlin.time.ExperimentalTime
@@ -25,7 +25,7 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 	val tileWidth: Double = width / puzzleState.area.numberOfColumns
 	val tileHeight: Double = height / puzzleState.area.numberOfRows
 
-	val solvePuzzleUseCase = SolvePuzzleUseCase(puzzleState)
+	val puzzleSolver = PuzzleSolver(puzzleState)
 	var stateCounter: Long = 0
 	val puzzleStartTime = TimeSource.Monotonic.markNow()
 	val numberOfStatesToTryEachFrame = 100 // TODO make this modifable in the UI for fun!
@@ -33,8 +33,8 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 
 	addUpdater {
 		for (i in 1..numberOfStatesToTryEachFrame) {
-			if (solvePuzzleUseCase.hasNextState() && !lastState.isSolved()) {
-				lastState = solvePuzzleUseCase.nextState()
+			if (puzzleSolver.hasNextState() && !lastState.isSolved()) {
+				lastState = puzzleSolver.nextState()
 				stateCounter++
 			}
 		}

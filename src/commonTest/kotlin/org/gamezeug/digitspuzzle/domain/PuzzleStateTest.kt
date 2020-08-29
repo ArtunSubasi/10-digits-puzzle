@@ -1,6 +1,5 @@
 package org.gamezeug.digitspuzzle.domain
 
-import org.gamezeug.digitspuzzle.application.SolvePuzzleUseCase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

@@ -1,10 +1,7 @@
-package org.gamezeug.digitspuzzle.application
+package org.gamezeug.digitspuzzle.domain
 
-import org.gamezeug.digitspuzzle.domain.PuzzleState
-
-// TODO after the changes in this class, the naming is not suitable anymore. Come up with a new name. Make iterable?
 @ExperimentalStdlibApi
-class SolvePuzzleUseCase(initialState: PuzzleState) {
+class PuzzleSolver(initialState: PuzzleState) {
 
     private val statesToCheck = mutableListOf(initialState)
 
