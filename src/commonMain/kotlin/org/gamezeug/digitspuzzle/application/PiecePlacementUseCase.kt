@@ -5,15 +5,13 @@ import org.gamezeug.digitspuzzle.domain.*
 // TODO this use case should be moved to the domain of the PuzzleState
 class PiecePlacementUseCase {
 
-    fun isPieceAvailable(move: Move, state: PuzzleState): Boolean {
-        return state.availablePieces.contains(move.piece)
-    }
+
 
     fun placePiece(move: Move, state: PuzzleState): PuzzleState {
         if (!state.area.isValidPiecePlacement(move)) {
             TODO("exception handling, use isValidPiecePlacement? move it to another class for testability? do it somewhere else?")
         }
-        if (!isPieceAvailable(move, state)) {
+        if (!state.isPieceAvailable(move)) {
             TODO("nope nope nope")
         }
         val tileReplacements = mutableListOf<TileReplacement>()

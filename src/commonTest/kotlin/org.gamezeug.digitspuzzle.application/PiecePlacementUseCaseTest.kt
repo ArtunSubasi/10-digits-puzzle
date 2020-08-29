@@ -43,35 +43,4 @@ class PiecePlacementUseCaseTest {
         assertEquals(listOf(move), newState.moves)
     }
 
-    @Test
-    fun `isPieceAvailable, positive`() {
-        // Given
-        val piece = PuzzlePieceFactory.build1()
-        val move = Move(PuzzleAreaCoordinate(0, 0), piece)
-        val area = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 1)
-        val state = PuzzleState(area, mutableListOf(piece))
-
-        // When
-        val pieceAvailable = PiecePlacementUseCase().isPieceAvailable(move, state)
-
-        // Then
-        assertTrue(pieceAvailable)
-    }
-
-    @Test
-    fun `isPieceAvailable, negative`() {
-        // Given
-        val piece1 = PuzzlePieceFactory.build1()
-        val piece2 = PuzzlePieceFactory.build2()
-        val move = Move(PuzzleAreaCoordinate(0, 0), piece1)
-        val area = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 1)
-        val state = PuzzleState(area, mutableListOf(piece2))
-
-        // When
-        val pieceAvailable = PiecePlacementUseCase().isPieceAvailable(move, state)
-
-        // Then
-        assertFalse(pieceAvailable)
-    }
-
 }

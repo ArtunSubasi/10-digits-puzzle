@@ -7,6 +7,8 @@ data class PuzzleState(
         val usedPieces: List<PuzzlePiece> = listOf()
 ) {
     fun isSolved() = availablePieces.isEmpty()
+    fun isPieceAvailable(move: Move)= availablePieces.contains(move.piece)
+
     override fun toString() = area.toString()
 }
 
