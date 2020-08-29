@@ -147,7 +147,6 @@ object PuzzlePieceFactory {
     fun buildFromCsv(charToPrint: Char, csv: String): PuzzlePiece {
         val area = PuzzleAreaFactory.buildFromCsv(charToPrint, csv)
         val puzzlePiece = PuzzlePiece(charToPrint.toString(), area)
-        println("Puzzle piece created:\n $puzzlePiece")
         return puzzlePiece
     }
 

@@ -11,7 +11,6 @@ The JavaScript version runs pretty slow and will take a lot of time to find a so
 
 # To Dos
 * Tons of refactorings, especially in main.kt
-* Replace println expressions with the KorGe logger
 * Add some pictures and documentation of the domain model to the README
 * Make the puzzle playable using KorGe inputs. This will need new features such a moving a puzzle piece
 * Optimize the algorithm, especially the dead end detection
