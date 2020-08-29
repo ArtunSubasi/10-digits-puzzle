@@ -5,24 +5,12 @@ import org.gamezeug.digitspuzzle.domain.*
 // TODO this use case should be moved to the domain of the PuzzleState
 class PiecePlacementUseCase {
 
-    fun isValidPiecePlacement(move: Move, state: PuzzleState): Boolean {
-        val effectiveArea = move.getEffectiveArea()
-        if (!state.area.hasRoomFor(effectiveArea, move.coordinate)) return false
-        for ((rowIndex, row) in effectiveArea.rows.withIndex()) {
-            for ((colIndex, newTile) in row.tiles.withIndex()) {
-                val tileInThePuzzle = state.area.getTile(colIndex + move.coordinate.x, rowIndex + move.coordinate.y)
-                if (!newTile.isDisjoint(tileInThePuzzle)) return false
-            }
-        }
-        return true
-    }
-
     fun isPieceAvailable(move: Move, state: PuzzleState): Boolean {
         return state.availablePieces.contains(move.piece)
     }
 
     fun placePiece(move: Move, state: PuzzleState): PuzzleState {
-        if (!isValidPiecePlacement(move, state)) {
+        if (!state.area.isValidPiecePlacement(move)) {
             TODO("exception handling, use isValidPiecePlacement? move it to another class for testability? do it somewhere else?")
         }
         if (!isPieceAvailable(move, state)) {

@@ -59,7 +59,7 @@ class SolvePuzzleUseCase(initialState: PuzzleState) {
                 for (rotation in Rotation.values()) {
                     for (mirroring in Mirroring.values()) {
                         val move = Move(coordinate, piece, rotation, mirroring)
-                        if (piecePlacementUseCase.isValidPiecePlacement(move, state)) {
+                        if (state.area.isValidPiecePlacement(move)) {
                             availableValidMoves.add(move)
                         }
                     }

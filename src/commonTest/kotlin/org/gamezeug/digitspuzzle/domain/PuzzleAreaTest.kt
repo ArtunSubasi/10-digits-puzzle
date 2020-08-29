@@ -1,5 +1,6 @@
 package org.gamezeug.digitspuzzle.domain
 
+import org.gamezeug.digitspuzzle.application.PiecePlacementUseCase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -152,6 +153,51 @@ class PuzzleAreaTest {
     @Test
     fun `getNumberOfFilledTiles for 5x3`() {
         assertEquals(11, testArea.getNumberOfFilledTiles())
+    }
+
+
+    @Test
+    fun `isValidPiecePlacement, valid, empty area`() {
+        // Given
+        val piece = PuzzlePieceFactory.build1()
+        val move = Move(PuzzleAreaCoordinate(0, 0), piece)
+        val area = PuzzleAreaFactory.buildPuzzleArea(5, 1)
+
+        // When
+        val validPlacement = area.isValidPiecePlacement(move)
+
+        // Then
+        assertTrue(validPlacement)
+    }
+
+    @Test
+    fun `isValidPiecePlacement, invalid, tiles not disjoint`() {
+        // Given
+        val piece = PuzzlePieceFactory.build1()
+        val move = Move(PuzzleAreaCoordinate(0, 0), piece)
+        val replacement = TileReplacement(PuzzleAreaCoordinate(0, 3), fullTile())
+        val area = PuzzleAreaFactory.buildPuzzleArea(5, 1).replaceTiles(replacement)
+
+        // When
+        val validPlacement = area.isValidPiecePlacement(move)
+
+        // Then
+        assertFalse(validPlacement)
+    }
+
+    @Test
+    fun `isValidPiecePlacement, valid, tiles not disjoint, x-offset`() {
+        // Given
+        val piece = PuzzlePieceFactory.build1()
+        val move = Move(PuzzleAreaCoordinate(1, 0), piece)
+        val replacement = TileReplacement(PuzzleAreaCoordinate(0, 3), fullTile())
+        val area = PuzzleAreaFactory.buildPuzzleArea(5, 2).replaceTiles(replacement)
+
+        // When
+        val validPlacement = area.isValidPiecePlacement(move)
+
+        // Then
+        assertTrue(validPlacement)
     }
 
 }
