@@ -25,7 +25,7 @@ class SolvePuzzleUseCase(private val observer: SolvePuzzleObserver? = null) {
             if (triedMoves % 10_000L == 0L) {
                 println("Tried $triedMoves puzzle states. Number of states to check: ${statesToCheck.size}")
             }
-            if (lastState.availablePieces.isEmpty()) { // TODO apply some DDD principles here. This is an end game check!
+            if (lastState.isSolved()) {
                 println("==================")
                 println("Solved the puzzle!")
                 println("by trying $triedMoves puzzle states")
@@ -40,10 +40,9 @@ class SolvePuzzleUseCase(private val observer: SolvePuzzleObserver? = null) {
                     statesToCheck.addAll(availableValidMoves.pmap { piecePlacementUseCase.placePiece(it, lastState) })
                 }
             }
-
-            // TODO how to get rid of the 1 & 7 problem?
-
         }
+
+        // We tried all possible states and could not find a solution
         return null
     }
 
