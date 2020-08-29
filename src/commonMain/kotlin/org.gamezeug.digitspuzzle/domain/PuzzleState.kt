@@ -35,6 +35,26 @@ data class PuzzleState(
         )
     }
 
+    /**
+     * Get all available valid moves without duplicates. Warning: Incoming loop of loops!
+     */
+    fun getAvailableValidMoves(): List<Move> {
+        val availableValidMoves = mutableListOf<Move>()
+        for (coordinate in area.getAvailableCoordinates()) {
+            for (piece in availablePieces) {
+                for (rotation in Rotation.values()) {
+                    for (mirroring in Mirroring.values()) {
+                        val move = Move(coordinate, piece, rotation, mirroring)
+                        if (area.isValidPiecePlacement(move)) {
+                            availableValidMoves.add(move)
+                        }
+                    }
+                }
+            }
+        }
+        return availableValidMoves.toList()
+    }
+
     override fun toString() = area.toString()
 }
 

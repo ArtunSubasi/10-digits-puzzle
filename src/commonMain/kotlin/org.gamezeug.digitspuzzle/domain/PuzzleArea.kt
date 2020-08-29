@@ -1,5 +1,7 @@
 package org.gamezeug.digitspuzzle.domain
 
+import com.soywiz.kmem.isEven
+
 /**
  * An immutable tiled area consisting of rows and columns.
  */
@@ -33,6 +35,20 @@ data class PuzzleArea(val rows: List<PuzzleRow>) {
             }
         }
         return true
+    }
+
+    fun getAvailableCoordinates(): Set<PuzzleAreaCoordinate> {
+        val availableCoordinates = mutableSetOf<PuzzleAreaCoordinate>()
+        for (y in 0 until numberOfRows) {
+            if (y.isEven) {
+                for (x in 0 until numberOfColumns) {
+                    if (x.isEven) {
+                        availableCoordinates.add(PuzzleAreaCoordinate(x, y))
+                    }
+                }
+            }
+        }
+        return availableCoordinates
     }
 
     fun getNumberOfFilledTiles(): Int {

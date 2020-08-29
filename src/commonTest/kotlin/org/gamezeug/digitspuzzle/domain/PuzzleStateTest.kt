@@ -1,5 +1,6 @@
 package org.gamezeug.digitspuzzle.domain
 
+import org.gamezeug.digitspuzzle.application.SolvePuzzleUseCase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -88,6 +89,29 @@ class PuzzleStateTest {
         assertEquals(listOf(), newState.availablePieces)
         assertEquals(listOf(piece), newState.usedPieces)
         assertEquals(listOf(move), newState.moves)
+    }
+
+    @Test
+    fun `getAvailableValidMoves only piece0 available`() {
+        // Given
+        val piece0 = PuzzlePieceFactory.build0()
+        val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 3)
+        val state = PuzzleState(initialArea, listOf(piece0))
+
+        // When
+        val availableMoves = state.getAvailableValidMoves()
+
+        // Then
+        val standard = Move(PuzzleAreaCoordinate(0, 0), piece0)
+        val rotated180 = Move(PuzzleAreaCoordinate(0, 0), piece0, rotation = Rotation.ROTATE_180_DEGREES)
+        val mirrored = Move(PuzzleAreaCoordinate(0, 0), piece0, mirroring = Mirroring.MIRROR_HORIZONTALLY)
+        val mirroredAndRotated180 = Move(
+                PuzzleAreaCoordinate(0, 0),
+                piece0,
+                mirroring = Mirroring.MIRROR_HORIZONTALLY,
+                rotation = Rotation.ROTATE_180_DEGREES
+        )
+        assertEquals(setOf(standard, rotated180, mirrored, mirroredAndRotated180), availableMoves.toSet())
     }
 
 }

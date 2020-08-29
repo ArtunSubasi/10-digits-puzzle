@@ -1,6 +1,5 @@
 package org.gamezeug.digitspuzzle.application
 
-import com.soywiz.kmem.isEven
 import com.soywiz.korio.async.async
 import com.soywiz.korio.async.runBlockingNoSuspensions
 import kotlinx.coroutines.awaitAll
@@ -25,7 +24,7 @@ class SolvePuzzleUseCase(initialState: PuzzleState) {
     fun nextState(): PuzzleState {
         val nextState = statesToCheck.removeLast()
         if (shouldContinueSolvingPuzzle(nextState)) {
-            val availableValidMoves = getAvailableValidMoves(nextState).reversed()
+            val availableValidMoves = nextState.getAvailableValidMoves().reversed()
             runBlockingNoSuspensions {
                 statesToCheck.addAll(availableValidMoves.pmap { nextState.placePiece(it) })
             }
@@ -45,42 +44,6 @@ class SolvePuzzleUseCase(initialState: PuzzleState) {
 
     private suspend fun <A, B> Iterable<A>.pmap(f: suspend (A) -> B): List<B> = coroutineScope {
         map { async { f(it) } }.awaitAll()
-    }
-
-    // TODO move to PuzzleState
-    /**
-     * Get all available valid moves without duplicates. Warning: Incoming loop of loops!
-     */
-    fun getAvailableValidMoves(state: PuzzleState): List<Move> {
-        val availableValidMoves = mutableListOf<Move>()
-        for (coordinate in getAvailableCoordinates(state)) {
-            for (piece in state.availablePieces) {
-                for (rotation in Rotation.values()) {
-                    for (mirroring in Mirroring.values()) {
-                        val move = Move(coordinate, piece, rotation, mirroring)
-                        if (state.area.isValidPiecePlacement(move)) {
-                            availableValidMoves.add(move)
-                        }
-                    }
-                }
-            }
-        }
-        return availableValidMoves.toList()
-    }
-
-    // TODO move to PuzzleArea
-    private fun getAvailableCoordinates(state: PuzzleState): Set<PuzzleAreaCoordinate> {
-        val availableCoordinates = mutableSetOf<PuzzleAreaCoordinate>()
-        for (y in 0 until state.area.numberOfRows) {
-            if (y.isEven) {
-                for (x in 0 until state.area.numberOfColumns) {
-                    if (x.isEven) {
-                        availableCoordinates.add(PuzzleAreaCoordinate(x, y))
-                    }
-                }
-            }
-        }
-        return availableCoordinates
     }
 
 }
