@@ -49,7 +49,7 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 				for ((rowIndex, row) in lastState.area.rows.withIndex()) {
 					for ((colIndex, tile) in row.tiles.withIndex()) {
 						tilePrinter.printGrids(colIndex, rowIndex)
-						tilePrinter.printTile(colIndex, rowIndex, tile) // TODO replace the argument with TileNavigator
+						tilePrinter.printTile(colIndex, rowIndex, tile)
 					}
 				}
 			}

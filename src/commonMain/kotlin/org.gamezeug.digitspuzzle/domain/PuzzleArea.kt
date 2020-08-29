@@ -138,7 +138,6 @@ data class PuzzleArea(val rows: List<PuzzleRow>) {
     }
 }
 
-// TODO check if there is a better way to define factories, such as by using companion objects, or plain constuctors
 object PuzzleAreaFactory {
     fun buildPuzzleArea(numberOfRows: Int, numberOfColumns: Int): PuzzleArea {
         val puzzleRows = MutableList(numberOfRows) { _ -> PuzzleRowFactory.buildPuzzleRow(numberOfColumns) }
@@ -172,16 +171,11 @@ object PuzzleAreaFactory {
 
 class TileNavigator(private val area: PuzzleArea, val coordinate: PuzzleAreaCoordinate) {
     fun hasLeftTile() = coordinate.x > 0
-    fun hasTopTile() = coordinate.y > 0
     fun hasRightTile() = coordinate.x + 1 < area.numberOfColumns
     fun hasBottomTile() = coordinate.y + 1 < area.numberOfRows
     fun getTile() = area.getTile(coordinate.x , coordinate.y)
     fun left(): TileNavigator {
         val newCoordinate = PuzzleAreaCoordinate(coordinate.x - 1, coordinate.y)
-        return TileNavigator(area, newCoordinate)
-    }
-    fun top(): TileNavigator {
-        val newCoordinate = PuzzleAreaCoordinate(coordinate.x, coordinate.y - 1)
         return TileNavigator(area, newCoordinate)
     }
     fun right(): TileNavigator {
@@ -190,10 +184,6 @@ class TileNavigator(private val area: PuzzleArea, val coordinate: PuzzleAreaCoor
     }
     fun bottom(): TileNavigator {
         val newCoordinate = PuzzleAreaCoordinate(coordinate.x, coordinate.y + 1)
-        return TileNavigator(area, newCoordinate)
-    }
-    fun carriageReturn(): TileNavigator {
-        val newCoordinate = PuzzleAreaCoordinate(0, coordinate.y + 1)
         return TileNavigator(area, newCoordinate)
     }
 }
