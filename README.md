@@ -9,12 +9,6 @@ https://www.myminifactory.com/object/3d-print-10-digits-puzzle-tricky-number-puz
 ### [🎮 Run on Browser 🎮](https://artunsubasi.github.io/10-digits-puzzle/)
 The JavaScript version runs pretty slow and will take a lot of time to find a solution (multiple hours).
 
-# To Dos
-* Tons of refactorings, especially in main.kt
-* Add some pictures and documentation of the domain model to the README
-* Make the puzzle playable using KorGe inputs. This will need new features such a moving a puzzle piece
-* Optimize the algorithm, especially the dead end detection
-
 ## Development
 
 The rest of the README file is based on the KorGe template at GitHub: <https://github.com/korlibs/korge-hello-world>
