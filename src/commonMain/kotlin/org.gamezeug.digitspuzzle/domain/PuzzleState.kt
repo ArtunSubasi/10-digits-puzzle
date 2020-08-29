@@ -55,6 +55,16 @@ data class PuzzleState(
         return availableValidMoves.toList()
     }
 
+    /**
+     * Check if puzzle state is a dead end: We can definitely say that it does not make sense to continue solving.
+     */
+    fun isDeadEnd(): Boolean {
+        // Check if the puzzle contains a blank area which is too small for the smallest available piece
+        val areaOfSmallestPiece = availablePieces.map { it.area.getNumberOfFilledTiles() }.min()!!
+        val tooSmallBlankArea = area.getBlankAreaMap().values.find { it in 2..areaOfSmallestPiece }
+        return tooSmallBlankArea != null
+    }
+
     override fun toString() = area.toString()
 }
 
