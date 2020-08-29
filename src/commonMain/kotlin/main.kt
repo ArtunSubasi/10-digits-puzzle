@@ -9,7 +9,6 @@ import org.gamezeug.digitspuzzle.application.SolvePuzzleUseCase
 import org.gamezeug.digitspuzzle.domain.PuzzlePieceFactory
 import org.gamezeug.digitspuzzle.domain.PuzzleStateFactory
 import org.gamezeug.digitspuzzle.domain.Tile
-import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
 
@@ -25,8 +24,6 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 	val puzzleState = PuzzleStateFactory.createInitialPuzzleState(pieces)
 	val tileWidth: Double = width / puzzleState.area.numberOfColumns
 	val tileHeight: Double = height / puzzleState.area.numberOfRows
-	println("tileWidth: $tileWidth, tileHeight: $tileHeight")
-	val tilePrinter = TilePrinter(this, tileWidth, tileHeight)
 
 	val solvePuzzleUseCase = SolvePuzzleUseCase(puzzleState)
 	var stateCounter: Long = 0
@@ -41,48 +38,69 @@ suspend fun main() = Korge(width = 1100, height = 700, bgcolor = Colors["#444444
 				stateCounter++
 			}
 		}
-		if (!lastState.isSolved()) {
-			// TODO this print calls should also be replaced by updaters
-			tilePrinter.clear()
-			tilePrinter.printStates(stateCounter)
-			tilePrinter.printDuration(puzzleStartTime.elapsedNow())
-			for ((rowIndex, row) in lastState.area.rows.withIndex()) {
-				for ((colIndex, tile) in row.tiles.withIndex()) {
-					tilePrinter.printGrids(colIndex, rowIndex)
-					tilePrinter.printTile(colIndex, rowIndex, tile)
+	}
+
+	graphics {
+		useNativeRendering = false
+		val tilePrinter = TilePrinter(this, tileWidth, tileHeight)
+		addUpdater {
+			clear()
+			if (!lastState.isSolved()) {
+				for ((rowIndex, row) in lastState.area.rows.withIndex()) {
+					for ((colIndex, tile) in row.tiles.withIndex()) {
+						tilePrinter.printGrids(colIndex, rowIndex)
+						tilePrinter.printTile(colIndex, rowIndex, tile) // TODO replace the argument with TileNavigator
+					}
+				}
+			}
+		}
+		text(stateCounter.toString()) {
+			position(10, 10)
+			addUpdater { text = stateCounter.toString() }
+		}
+		text(stateCounter.toString()) {
+			position(parent?.width!! - 120, 10)
+			addUpdater {
+				if (!lastState.isSolved()) {
+					text = puzzleStartTime.elapsedNow().toComponents { hours, minutes, seconds, _
+						->
+						"${formatTimeComponent(hours)}:${formatTimeComponent(minutes)}:${formatTimeComponent(seconds)}"
+					}
+				}
+			}
+		}
+		text(stateCounter.toString()) {
+			position(10, parent?.height!! - 30)
+			addUpdater {
+				if (!lastState.isSolved()) {
+					val statesPerSecondRate: Double = stateCounter.toDouble() / puzzleStartTime.elapsedNow().inSeconds
+					text = statesPerSecondRate.toString()
 				}
 			}
 		}
 	}
-
 }
 
-class TilePrinter(private val parent: Container, private val tileWidth: Double, private val tileHeight: Double) {
+private fun chooseSegmentColor(segmentChar: Char): RGBA {
+	return when (segmentChar) {
+		'0' -> Colors["#FF0000"]
+		'1' -> Colors["#FF7F00"]
+		'2' -> Colors["#FFFF00"]
+		'3' -> Colors["#7FFF00"]
+		'4' -> Colors["#00FFFF"]
+		'5' -> Colors["#007FFF"]
+		'6' -> Colors["#0000FF"]
+		'7' -> Colors["#7F00FF"]
+		'8' -> Colors["#FF00FF"]
+		'9' -> Colors["#FF7FFF"]
+		'X' -> Colors["#000000"]
+		else -> Colors["#FFFFFF"]
+	}
+}
 
-	private var graphics: Graphics = initGraphics()
-	private var counterText = parent.text("") {
-		position(10, 10)
-	}
-	private var durationText = parent.text("00:00:00") {
-		position(parent?.width!! - 120, 10) // TODO what is going on here?
-	}
+private fun formatTimeComponent(timeComponent: Int) = timeComponent.toString().padStart(2, '0')
 
-	// TODO this looks like a hack. Find out how to clear the graphics without removing and creating a new one.
-	fun clear() {
-		parent.removeChild(graphics)
-		graphics.close()
-		graphics = initGraphics()
-		parent.removeChild(counterText)
-		parent.addChild(counterText)
-		parent.removeChild(durationText)
-		parent.addChild(durationText)
-	}
-
-	private fun initGraphics(): Graphics {
-		return parent.graphics {
-			useNativeRendering = false
-		}
-	}
+class TilePrinter(private val graphics: Graphics, private val tileWidth: Double, private val tileHeight: Double) {
 
 	fun printGrids(x: Int, y: Int) {
 		val x0: Double = x * tileWidth
@@ -135,35 +153,4 @@ class TilePrinter(private val parent: Container, private val tileWidth: Double, 
 			}
 		}
 	}
-
-	private fun chooseSegmentColor(segmentChar: Char): RGBA {
-		return when (segmentChar) {
-			'0' -> Colors["#FF0000"]
-			'1' -> Colors["#FF7F00"]
-			'2' -> Colors["#FFFF00"]
-			'3' -> Colors["#7FFF00"]
-			'4' -> Colors["#00FFFF"]
-			'5' -> Colors["#007FFF"]
-			'6' -> Colors["#0000FF"]
-			'7' -> Colors["#7F00FF"]
-			'8' -> Colors["#FF00FF"]
-			'9' -> Colors["#FF7FFF"]
-			'X' -> Colors["#000000"]
-			else -> Colors["#FFFFFF"]
-		}
-	}
-
-	fun printStates(stateCounter: Long) {
-		counterText.text = stateCounter.toString()
-	}
-
-	@ExperimentalTime
-	fun printDuration(duration: Duration) {
-		durationText.text = duration.toComponents {
-			hours, minutes, seconds, _
-				-> "${formatTimeComponent(hours)}:${formatTimeComponent(minutes)}:${formatTimeComponent(seconds)}"
-		}
-	}
-
-	private fun formatTimeComponent(timeComponent: Int) = timeComponent.toString().padStart(2, '0')
 }
