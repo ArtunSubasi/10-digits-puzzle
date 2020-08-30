@@ -36,9 +36,10 @@ jobs:
           path: some-pages
       - name: Push to remote
         run: |
+          cp master/build/web-min-webpack/* some-pages
           cd some-pages
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Release "
+          git commit -m "Release"
           git push
