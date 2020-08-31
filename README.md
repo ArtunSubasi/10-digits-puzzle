@@ -1,15 +1,16 @@
 # 10 Digits Puzzle
 
+### [🎮 Run on Browser 🎮](https://artunsubasi.github.io/10-digits-puzzle/)
+
 This repo contains:
 * a domain model of the 10 digits puzzle also known as the tricky numbers puzzle, implemented in Kotlin:
 https://www.myminifactory.com/object/3d-print-10-digits-puzzle-tricky-number-puzzle-72142
 * an algorithm which solves the puzzle using backtracking
 * a multiplatform live renderer using the KorGe game engine
 
-### [🎮 Run on Browser 🎮](https://artunsubasi.github.io/10-digits-puzzle/)
-The JavaScript version runs pretty slow and will take a lot of time to find a solution (multiple hours).
-
 ## Development
+
+[🎮 Run development version 🎮](https://artunsubasi.github.io/10-digits-puzzle/dev) (master branch)
 
 The rest of the README file is based on the KorGe template at GitHub: <https://github.com/korlibs/korge-hello-world>
 
