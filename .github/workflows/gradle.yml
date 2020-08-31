@@ -29,15 +29,15 @@ jobs:
         run: master/gradlew -b master//build.gradle.kts jvmTest
       - name: Package with Gradle
         run: master/gradlew -b master//build.gradle.kts jsWebMinWebpack
-      - name: Checkout some-pages
+      - name: Checkout gh-pages
         uses: actions/checkout@v2
         with:
-          ref: some-pages
-          path: some-pages
+          ref: gh-pages
+          path: gh-pages
       - name: Push to remote
         run: |
-          cp master/build/web-min-webpack/* some-pages
-          cd some-pages
+          cp master/build/web-min-webpack/* gh-pages
+          cd gh-pages
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
