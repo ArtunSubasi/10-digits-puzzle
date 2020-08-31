@@ -36,8 +36,8 @@ jobs:
           ref: gh-pages
           path: gh-pages
       - name: Prepare dev
-          if: github.ref == 'refs/heads/master'
-          run: cp master/build/web-min-webpack/* gh-pages/dev
+        if: github.ref == 'refs/heads/master'
+        run: cp master/build/web-min-webpack/* gh-pages/dev
       - name: Prepare production
         if: startsWith(github.ref, 'refs/tags/')
         run: cp master/build/web-min-webpack/* gh-pages
