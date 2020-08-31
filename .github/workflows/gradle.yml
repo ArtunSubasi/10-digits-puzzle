@@ -37,10 +37,10 @@ jobs:
           path: gh-pages
       - name: Prepare production
         if: startsWith(github.ref, 'refs/tags/')
-        run: master/build/web-min-webpack/* gh-pages
+        run: cp master/build/web-min-webpack/* gh-pages
       - name: Prepare dev
         if: github.ref == 'refs/heads/master'
-        run: master/build/web-min-webpack/* gh-pages/dev
+        run: cp master/build/web-min-webpack/* gh-pages/dev
       - name: Push to remote
         if: (github.event == 'push') && ((github.ref == 'refs/heads/master') || startsWith(github.ref, 'refs/tags/'))
         run: |
