@@ -1,5 +1,8 @@
 # 10 Digits Puzzle
 
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+
+
 ### [🎮 Run on Browser 🎮](https://artunsubasi.github.io/10-digits-puzzle/)
 
 This repo contains:
