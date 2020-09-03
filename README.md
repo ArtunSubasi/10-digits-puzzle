@@ -10,7 +10,7 @@ https://www.myminifactory.com/object/3d-print-10-digits-puzzle-tricky-number-puz
 
 ## Development
 
-[🎮 Run development version 🎮](https://artunsubasi.github.io/10-digits-puzzle/dev) (master branch)
+[🎮 Run development version 🎮](https://artunsubasi.github.io/10-digits-puzzle/dev) (`develop` branch)
 
 The rest of the README file is based on the KorGe template at GitHub: <https://github.com/korlibs/korge-hello-world>
 
