@@ -30,6 +30,11 @@ jobs:
         run: master/gradlew -b master/build.gradle.kts jvmTest
       - name: Package with Gradle
         run: master/gradlew -b master/build.gradle.kts jsWebMinWebpack
+      - name: Zip JS distribution
+        run: |
+          cd master
+          cp -R build/web-min-webpack/ 10-digits-puzzle-js
+          zip 10-digits-puzzle-js.zip 10-digits-puzzle-js/*
 
       # Semantic Release
       - name: Setup Node.js
@@ -44,7 +49,6 @@ jobs:
         run: |
           cd master
           npx semantic-release
-          cd ..
 
       # Deploy to GitHub Pages
       - name: Checkout gh-pages

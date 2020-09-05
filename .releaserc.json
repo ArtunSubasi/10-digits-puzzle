@@ -7,8 +7,9 @@
       {
         "assets": [
           {
-            "path": "build/web-min-webpack/**",
-            "label": "Web distribution"
+            "path": "10-digits-puzzle-js.zip",
+            "name": "10-digits-puzzle-js-${nextRelease.gitTag}.zip",
+            "label": "10 Digits Puzzle JS distribution"
           }
         ]
       }
