@@ -39,7 +39,12 @@ jobs:
       - name: Install NPM dependencies
         run: npm --prefix master ci
       - name: Semantic Release
-        run: npx --prefix master semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd master
+          npx semantic-release
+          cd ..
 
       # Deploy to GitHub Pages
       - name: Checkout gh-pages
