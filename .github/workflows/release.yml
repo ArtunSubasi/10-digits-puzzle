@@ -37,9 +37,9 @@ jobs:
         with:
           node-version: 12
       - name: Install NPM dependencies
-        run: npm ci
+        run: npm --prefix master ci
       - name: Semantic Release
-        run: npx semantic-release
+        run: npx --prefix master semantic-release
 
       # Deploy to GitHub Pages
       - name: Checkout gh-pages
