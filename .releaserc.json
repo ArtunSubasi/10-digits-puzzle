@@ -9,7 +9,12 @@
           {
             "path": "10-digits-puzzle-js.zip",
             "name": "10-digits-puzzle-js-${nextRelease.gitTag}.zip",
-            "label": "10 Digits Puzzle JS distribution"
+            "label": "10 Digits Puzzle JS distribution (zip)"
+          },
+          {
+            "path": "10-digits-puzzle-jvm.jar",
+            "name": "10-digits-puzzle-jvm-${nextRelease.gitTag}.jar",
+            "label": "10 Digits Puzzle JVM distribution (jar)"
           }
         ]
       }
