@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Setup
       - name: Set up Java
         uses: actions/setup-java@v1
         with:
@@ -21,12 +22,26 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: master
+
+      # Build, test, package
       - name: Grant execute permission for gradlew
         run: chmod +x master/gradlew
       - name: Test with Gradle
         run: master/gradlew -b master/build.gradle.kts jvmTest
       - name: Package with Gradle
         run: master/gradlew -b master/build.gradle.kts jsWebMinWebpack
+
+      # Semantic Release
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Install NPM dependencies
+        run: npm ci
+      - name: Semantic Release
+        run: npx semantic-release
+
+      # Deploy to GitHub Pages
       - name: Checkout gh-pages
         uses: actions/checkout@v2
         with:
