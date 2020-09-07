@@ -11,6 +11,36 @@ https://www.myminifactory.com/object/3d-print-10-digits-puzzle-tricky-number-puz
 * an algorithm which solves the puzzle using backtracking
 * a multiplatform live renderer using the KorGe game engine
 
+## Domain Model
+![Alt text](./docs/domain-model.svg)
+
+The `PuzzleArea` represents a rectangle area using `PuzzleRow`s of `Tile`s.
+Each `Tile` contains four `segment`s.
+The `segment` occupation uses a `Char` which is then used by the GUI to choose the color.
+
+Each `PuzzlePiece` is represented using the smallest possible `PuzzleArea`.
+For example, the piece 3 is represented by a 3x5 `PuzzleArea` whose `segment`s are
+set according to the shape of the `PuzzlePiece`. The whole playable area also
+uses a 11x9 `PuzzleArea`.
+
+`PuzzleState` captures the state of the puzzle using
+- the current `PuzzleArea`
+- currently `availablePieces`
+- currently `usedPieces`
+- and all the `Move`s that the player has made preserving order
+
+A `Move` represents a `PuzzlePiece` which was possibly rotated, mirrored (flipped) 
+and placed on a certain `coordinate` on the `PuzzleArea`.
+A `Move` on a `PuzzleState` leads to a new `PuzzleState`.
+
+The `PuzzleSolver` is initialized with a single `PuzzleState` to iterate over possible next
+`PuzzleState`s to find a solution.
+
+All classes are immutable except for the `PuzzleSolver`.
+The `PuzzleSolver` contains a mutable list of possible `PuzzleState` to check.
+The `PuzzleSolver` updates the states to check by calculating and applying all possible `Move`s
+based on the next `PuzzleState` to check.
+
 ## Development
 
 [🎮 Run development version 🎮](https://artunsubasi.github.io/10-digits-puzzle/dev) (`develop` branch)
