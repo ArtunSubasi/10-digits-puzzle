@@ -10,8 +10,7 @@ import com.soywiz.korma.geom.vector.rect
 import org.gamezeug.digitspuzzle.domain.Tile
 import kotlin.time.ExperimentalTime
 
-@ExperimentalStdlibApi
-@ExperimentalTime
+@OptIn(ExperimentalTime::class)
 class PuzzleScene(
 		private val uiState: PuzzleUiState
 ): Scene() {

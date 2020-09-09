@@ -1,6 +1,6 @@
 package org.gamezeug.digitspuzzle.domain
 
-@ExperimentalStdlibApi
+@OptIn(ExperimentalStdlibApi::class)
 class PuzzleSolver(initialState: PuzzleState) {
 
     private val statesToCheck = mutableListOf(initialState)

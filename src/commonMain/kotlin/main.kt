@@ -7,16 +7,11 @@ import org.gamezeug.digitspuzzle.domain.PuzzleSolver
 import org.gamezeug.digitspuzzle.domain.PuzzleStateFactory
 import org.gamezeug.digitspuzzle.ui.PuzzleScene
 import org.gamezeug.digitspuzzle.ui.PuzzleUiState
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
-@ExperimentalStdlibApi
 suspend fun main() = Korge(
 		config = Korge.Config(module = PuzzleModule)
 )
 
-@ExperimentalTime
-@ExperimentalStdlibApi
 object PuzzleModule: Module() {
 
 	override val mainScene = PuzzleScene::class

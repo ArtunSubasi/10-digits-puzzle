@@ -6,8 +6,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 
-@ExperimentalTime
-@ExperimentalStdlibApi
+@OptIn(ExperimentalTime::class)
 data class PuzzleUiState constructor(
         var lastPuzzleState: PuzzleState,
         var stateCounter: Long = 0,
