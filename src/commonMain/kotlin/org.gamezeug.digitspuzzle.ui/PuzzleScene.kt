@@ -32,7 +32,7 @@ class PuzzleScene(
 		val tileHeight: Double = this@PuzzleScene.views.virtualHeight.toDouble() / uiState.lastPuzzleState.area.numberOfRows
 
 		graphics {
-			useNativeRendering = false
+			useNativeRendering = true
 			val tilePrinter = TilePrinter(this, tileWidth, tileHeight)
 			addUpdater {
 				clear()
