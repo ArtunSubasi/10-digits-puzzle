@@ -59,7 +59,7 @@ jobs:
           path: gh-pages
       - name: Prepare GitHub deployment
         run: |
-          cp master/build/web-min-webpack/* gh-pages
+          cp master/build/web-min-webpack/* gh-pages || true
           echo '::set-env name=COMMIT_MESSAGE::Deploy release'
       - name: Deploy to GitHub pages
         run: |
