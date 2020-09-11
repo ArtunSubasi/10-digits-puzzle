@@ -2,6 +2,9 @@
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
+    ["@semantic-release/exec", {
+      "prepareCmd": "./prepare-release.sh ${nextRelease.version}"
+    }],
     [
       "@semantic-release/github",
       {

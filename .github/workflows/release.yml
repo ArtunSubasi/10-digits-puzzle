@@ -23,27 +23,27 @@ jobs:
         with:
           path: master
 
-      # Build, test, package
+      # Build and test
       - name: Grant execute permission for gradlew
         run: chmod +x master/gradlew
       - name: Test with Gradle
         run: master/gradlew -b master/build.gradle.kts jvmTest
-      - name: Package with Gradle
-        run: master/gradlew -b master/build.gradle.kts jsWebMinWebpack packageJvmFatJarProguard
-      - name: Prepare distribution assets
-        run: |
-          cd master
-          cp -R build/web-min-webpack/ 10-digits-puzzle-js
-          zip 10-digits-puzzle-js.zip 10-digits-puzzle-js/*
-          cp build/libs/*all-proguard.jar 10-digits-puzzle-jvm.jar
 
-      # Semantic Release
+      # Prepare Semantic Release
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 12
       - name: Install NPM dependencies
         run: npm --prefix master ci
+
+      # Semantic Release includes:
+      # - finding the new version based on the commits
+      # - generating release notes based on the commits
+      # - creating a git tag in GitHub
+      # - integrating the new version into the code
+      # - packaging the distributions including the integrated version
+      # - publishing the release in GitHub as a GitHub release
       - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

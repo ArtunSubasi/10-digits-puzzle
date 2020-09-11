@@ -5,6 +5,7 @@ import com.soywiz.korge.view.*
 import com.soywiz.korim.color.Colors
 import com.soywiz.korim.color.RGBA
 import com.soywiz.korim.vector.Context2d
+import com.soywiz.korio.file.std.resourcesVfs
 import com.soywiz.korma.geom.vector.line
 import com.soywiz.korma.geom.vector.rect
 import org.gamezeug.digitspuzzle.domain.Tile
@@ -69,7 +70,14 @@ class PuzzleScene(
 					}
 				}
 			}
+			text(getVersion()) {
+				position(this@PuzzleScene.views.virtualWidth - 95, this@PuzzleScene.views.virtualHeight - 30)
+			}
 		}
+	}
+
+	private suspend fun getVersion(): String {
+		return resourcesVfs["version.txt"].readString()
 	}
 
 }
