@@ -24,8 +24,8 @@ jobs:
           path: master
 
       # Build and test
-      - name: Grant execute permission for gradlew
-        run: chmod +x master/gradlew
+      - name: Grant execute permission for build scripts
+        run: chmod +x master/gradlew master/prepare-release.sh
       - name: Test with Gradle
         run: master/gradlew -b master/build.gradle.kts jvmTest
 
@@ -52,16 +52,16 @@ jobs:
           npx semantic-release
 
       # Deploy to GitHub Pages
-      - name: Checkout gh-pages
+      - name: Checkout GitHub pages
         uses: actions/checkout@v2
         with:
           ref: gh-pages
           path: gh-pages
-      - name: Prepare production
+      - name: Prepare GitHub deployment
         run: |
           cp master/build/web-min-webpack/* gh-pages
           echo '::set-env name=COMMIT_MESSAGE::Deploy release'
-      - name: Push to remote
+      - name: Deploy to GitHub pages
         run: |
           cd gh-pages
           git config --global user.name "github-actions[bot]"
