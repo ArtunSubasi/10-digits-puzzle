@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Setup
       - name: Set up Java
         uses: actions/setup-java@v1
         with:
@@ -21,12 +22,21 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: develop
+
+      # Build and test
       - name: Grant execute permission for gradlew
         run: chmod +x develop/gradlew
       - name: Test with Gradle
         run: develop/gradlew -b develop/build.gradle.kts jvmTest
+
+      # Package
       - name: Package with Gradle
-        run: develop/gradlew -b develop/build.gradle.kts jsWebMinWebpack
+        run: |
+          cd develop
+          printf "dev $GITHUB_RUN_NUMBER" > 'src/commonMain/resources/version.txt'
+          ./gradlew jsWebMinWebpack
+
+      # Deploy to GitHub Pages
       - name: Checkout gh-pages
         uses: actions/checkout@v2
         with:
