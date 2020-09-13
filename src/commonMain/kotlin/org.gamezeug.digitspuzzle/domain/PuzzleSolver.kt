@@ -16,7 +16,7 @@ class PuzzleSolver(initialState: PuzzleState) {
      */
     fun nextState(): PuzzleState {
         val nextState = statesToCheck.removeLast()
-        if (!nextState.isDeadEnd()) {
+        if (!nextState.isSolved() && !nextState.isDeadEnd()) {
             val availableValidMoves = nextState.getAvailableValidMoves().reversed()
             statesToCheck.addAll(availableValidMoves.map { nextState.placePiece(it) })
         }
