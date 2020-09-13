@@ -7,10 +7,10 @@ data class PuzzleState(
         val usedPieces: List<PuzzlePiece> = listOf()
 ) {
     fun isSolved() = availablePieces.isEmpty()
-    fun isPieceAvailable(move: Move)= availablePieces.contains(move.piece)
+    fun hasAvailablePiece(puzzlePiece: PuzzlePiece)= availablePieces.contains(puzzlePiece)
 
     fun placePiece(move: Move): PuzzleState {
-        if (!isPieceAvailable(move)) {
+        if (!hasAvailablePiece(move.piece)) {
             throw IllegalArgumentException("The move is not valid. The piece is not available.")
         }
         if (!move.canBePlacedOn(area)) {

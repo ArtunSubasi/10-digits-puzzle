@@ -8,55 +8,52 @@ import kotlin.test.assertTrue
 class PuzzleStateTest {
 
     @Test
-    fun create_initial_puzzle_state() {
-        val state = PuzzleStateFactory.createInitialPuzzleState(listOf(PuzzlePieceFactory.build1()))
+    fun the_initial_puzzle_state_has_an_11x9_area() {
+        val state = PuzzleStateFactory.createInitialPuzzleState(listOf())
         assertEquals(11, state.area.numberOfColumns)
         assertEquals(9, state.area.numberOfRows)
-        assertEquals(1, state.availablePieces.size)
+    }
+
+    @Test
+    fun the_initial_puzzle_state_does_not_have_used_pieces() {
+        val state = PuzzleStateFactory.createInitialPuzzleState(listOf())
         assertEquals(0, state.usedPieces.size)
+    }
+
+    @Test
+    fun the_initial_puzzle_state_does_not_have_moves() {
+        val state = PuzzleStateFactory.createInitialPuzzleState(listOf())
         assertEquals(0, state.moves.size)
+    }
+
+    @Test
+    fun the_initial_puzzle_state_with_piece_1_has_only_piece_1_available() {
+        val piece1 = PuzzlePieceFactory.build1()
+        val state = PuzzleStateFactory.createInitialPuzzleState(listOf(piece1))
+        assertTrue(state.hasAvailablePiece(piece1))
+        assertEquals(1, state.availablePieces.size)
+    }
+
+    @Test
+    fun the_initial_puzzle_state_with_piece_1_does_not_have_piece_2_available() {
+        val state = PuzzleStateFactory.createInitialPuzzleState(listOf(PuzzlePieceFactory.build1()))
+        assertFalse(state.hasAvailablePiece(PuzzlePieceFactory.build2()))
+    }
+
+    @Test
+    fun a_puzzle_state_with_1_puzzle_piece_is_not_solved() {
+        val state = PuzzleStateFactory.createInitialPuzzleState(listOf(PuzzlePieceFactory.build1()))
         assertFalse(state.isSolved())
     }
 
     @Test
-    fun puzzle_without_available_pieces_should_be_solved() {
+    fun a_puzzle_state_without_any_available_pieces_is_solved() {
         val state = PuzzleStateFactory.createInitialPuzzleState(listOf())
         assertTrue(state.isSolved())
     }
 
     @Test
-    fun puzzle_piece_is_available_to_make_the_move() {
-        // Given
-        val piece = PuzzlePieceFactory.build1()
-        val move = Move(PuzzleAreaCoordinate(0, 0), piece)
-        val area = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 1)
-        val state = PuzzleState(area, mutableListOf(piece))
-
-        // When
-        val pieceAvailable = state.isPieceAvailable(move)
-
-        // Then
-        assertTrue(pieceAvailable)
-    }
-
-    @Test
-    fun puzzle_piece_is_not_available_to_make_the_move() {
-        // Given
-        val piece1 = PuzzlePieceFactory.build1()
-        val piece2 = PuzzlePieceFactory.build2()
-        val move = Move(PuzzleAreaCoordinate(0, 0), piece1)
-        val area = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 1)
-        val state = PuzzleState(area, mutableListOf(piece2))
-
-        // When
-        val pieceAvailable = state.isPieceAvailable(move)
-
-        // Then
-        assertFalse(pieceAvailable)
-    }
-
-    @Test
-    fun place_puzzle_piece() {
+    fun placing_puzzle_piece_1_to_a_1x5_area_solves_the_puzzle() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(0, 0), piece)
@@ -88,10 +85,11 @@ class PuzzleStateTest {
         assertEquals(listOf(), newState.availablePieces)
         assertEquals(listOf(piece), newState.usedPieces)
         assertEquals(listOf(move), newState.moves)
+        assertTrue(newState.isSolved())
     }
 
     @Test
-    fun available_moves_when_only_piece_0_is_available() {
+    fun a_puzzle_state_with_a_3x5_area_and_piece_0_has_4_different_available_valid_moves() {
         // Given
         val piece0 = PuzzlePieceFactory.build0()
         val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 3)
