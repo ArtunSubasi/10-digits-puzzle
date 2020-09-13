@@ -13,6 +13,19 @@ data class Move(
     fun getEffectiveArea(): PuzzleArea {
         return piece.mirrorBy(mirroring).rotateBy(rotation).area
     }
+
+    fun canBePlacedOn(area: PuzzleArea): Boolean {
+        val movesEffectiveArea = getEffectiveArea()
+        if (!area.hasRoomFor(movesEffectiveArea, coordinate)) return false
+        for ((rowIndex, row) in movesEffectiveArea.rows.withIndex()) {
+            for ((colIndex, newTile) in row.tiles.withIndex()) {
+                val tileInThePuzzle = area.getTile(colIndex + coordinate.x, rowIndex + coordinate.y)
+                if (!newTile.isDisjoint(tileInThePuzzle)) return false
+            }
+        }
+        return true
+    }
+
     override fun toString(): String = getEffectiveArea().toString()
     override fun hashCode(): Int = getEffectiveArea().hashCode() * coordinate.hashCode()
     override fun equals(other: Any?): Boolean {

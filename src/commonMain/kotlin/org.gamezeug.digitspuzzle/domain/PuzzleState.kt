@@ -13,7 +13,7 @@ data class PuzzleState(
         if (!isPieceAvailable(move)) {
             throw IllegalArgumentException("The move is not valid. The piece is not available.")
         }
-        if (!area.isValidPiecePlacement(move)) {
+        if (!move.canBePlacedOn(area)) {
             throw IllegalArgumentException("The move is not valid. The piece does not fit in.")
         }
         val tileReplacements = mutableListOf<TileReplacement>()
@@ -45,7 +45,7 @@ data class PuzzleState(
                 for (rotation in Rotation.values()) {
                     for (mirroring in Mirroring.values()) {
                         val move = Move(coordinate, piece, rotation, mirroring)
-                        if (area.isValidPiecePlacement(move)) {
+                        if (move.canBePlacedOn(area)) {
                             availableValidMoves.add(move)
                         }
                     }

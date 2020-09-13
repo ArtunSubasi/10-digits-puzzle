@@ -25,18 +25,6 @@ data class PuzzleArea(val rows: List<PuzzleRow>) {
         return wideEnough && tallEnough
     }
 
-    fun isValidPiecePlacement(move: Move): Boolean {
-        val effectiveArea = move.getEffectiveArea()
-        if (!hasRoomFor(effectiveArea, move.coordinate)) return false
-        for ((rowIndex, row) in effectiveArea.rows.withIndex()) {
-            for ((colIndex, newTile) in row.tiles.withIndex()) {
-                val tileInThePuzzle = getTile(colIndex + move.coordinate.x, rowIndex + move.coordinate.y)
-                if (!newTile.isDisjoint(tileInThePuzzle)) return false
-            }
-        }
-        return true
-    }
-
     fun getAvailableCoordinates(): Set<PuzzleAreaCoordinate> {
         val availableCoordinates = mutableSetOf<PuzzleAreaCoordinate>()
         for (y in 0 until numberOfRows) {

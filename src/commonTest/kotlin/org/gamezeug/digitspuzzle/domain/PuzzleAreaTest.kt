@@ -171,49 +171,4 @@ class PuzzleAreaTest {
         assertEquals(11, PuzzleAreaFactory.buildFromCsv('X', csvBlankArea).getNumberOfFilledTiles())
     }
 
-
-    @Test
-    fun piece_placement_into_an_empty_area_is_valid() {
-        // Given
-        val piece = PuzzlePieceFactory.build1()
-        val move = Move(PuzzleAreaCoordinate(0, 0), piece)
-        val area = PuzzleAreaFactory.buildPuzzleArea(5, 1)
-
-        // When
-        val validPlacement = area.isValidPiecePlacement(move)
-
-        // Then
-        assertTrue(validPlacement)
-    }
-
-    @Test
-    fun piece_placement_with_disjoint_tiles_is_invalid() {
-        // Given
-        val piece = PuzzlePieceFactory.build1()
-        val move = Move(PuzzleAreaCoordinate(0, 0), piece)
-        val replacement = TileReplacement(PuzzleAreaCoordinate(0, 3), fullTile())
-        val area = PuzzleAreaFactory.buildPuzzleArea(5, 1).replaceTiles(replacement)
-
-        // When
-        val validPlacement = area.isValidPiecePlacement(move)
-
-        // Then
-        assertFalse(validPlacement)
-    }
-
-    @Test
-    fun piece_placement_with_offset_is_valid() {
-        // Given
-        val piece = PuzzlePieceFactory.build1()
-        val move = Move(PuzzleAreaCoordinate(1, 0), piece)
-        val replacement = TileReplacement(PuzzleAreaCoordinate(0, 3), fullTile())
-        val area = PuzzleAreaFactory.buildPuzzleArea(5, 2).replaceTiles(replacement)
-
-        // When
-        val validPlacement = area.isValidPiecePlacement(move)
-
-        // Then
-        assertTrue(validPlacement)
-    }
-
 }
