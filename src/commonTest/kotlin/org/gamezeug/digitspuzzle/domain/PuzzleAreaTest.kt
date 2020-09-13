@@ -7,15 +7,8 @@ import kotlin.test.assertTrue
 
 class PuzzleAreaTest {
 
-    private val csvBlankArea = """
-            B   ,   ,BR  ,F   ,LB
-            F   ,   ,F   ,    ,F
-            TR  ,F  ,LT  ,    ,T
-            """.trimIndent()
-    private val testArea = PuzzleAreaFactory.buildFromCsv('X', csvBlankArea)
-
     @Test
-    fun build_1x1_area() {
+    fun a_new_1x1_area_has_only_empty_segments() {
         val expected = """
             [   ]
             [   ]
@@ -25,7 +18,7 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun build_2x3_area() {
+    fun a_new_2x3_area_has_only_empty_segments() {
         val numberOfRows = 2
         val numberOfColumns = 3
         val expected = """
@@ -43,7 +36,7 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun build_2x3_area_with_edges() {
+    fun a_new_2x2_area_with_edges_has_only_filled_segments_at_the_edges() {
         val numberOfRows = 2
         val numberOfColumns = 2
         val expected = """
@@ -61,7 +54,7 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun replace_tile_of_empty_1x1_area() {
+    fun an_empty_1x1_area_gets_full_if_its_only_tile_is_replaced_by_a_full_tile() {
         val emptyArea = PuzzleAreaFactory.buildPuzzleArea(1, 1)
         val replacements = TileReplacement(PuzzleAreaCoordinate(0, 0), fullTile())
 
@@ -76,12 +69,12 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun replace_multiple_tiles_of_an_empty_2x3_area() {
+    fun an_empty_2x3_area_gets_modified_if_its_two_tiles_are_replaced() {
         val numberOfRows = 2
         val numberOfColumns = 3
         val emptyArea = PuzzleAreaFactory.buildPuzzleArea(numberOfRows, numberOfColumns)
         val replacement1 = TileReplacement(PuzzleAreaCoordinate(0, 0), fullTile())
-        val replacement2 = TileReplacement(PuzzleAreaCoordinate(1, 1), Tile(rightSegment = 'X'))
+        val replacement2 = TileReplacement(PuzzleAreaCoordinate(1, 1), Tile(rightSegment = 'Y'))
 
         val newArea = emptyArea.replaceTiles(replacement1, replacement2)
 
@@ -90,51 +83,70 @@ class PuzzleAreaTest {
             [X X][   ][   ]
             [ X ][   ][   ]
             [   ][   ][   ]
-            [   ][  X][   ]
+            [   ][  Y][   ]
             [   ][   ][   ]
         """.trimIndent()
         assertEquals(expected, newArea.toString())
     }
 
     @Test
-    fun has_1x1_area_room_for_1x1_area() {
+    fun an_empty_1x1_area_has_room_for_a_1x1_area() {
         val area = PuzzleAreaFactory.buildPuzzleArea(1, 1)
         assertTrue(area.hasRoomFor(area, PuzzleAreaCoordinate(0, 0)))
     }
 
     @Test
-    fun has_1x1_area_room_for_1x2_area() {
+    fun an_empty_1x1_area_does_not_have_room_for_a_2x1_area() {
         val containerArea = PuzzleAreaFactory.buildPuzzleArea(1, 1)
         val newArea = PuzzleAreaFactory.buildPuzzleArea(1, 2)
         assertFalse(containerArea.hasRoomFor(newArea, PuzzleAreaCoordinate(0, 0)))
     }
 
     @Test
-    fun has_1x1_area_room_for_2x1_area() {
+    fun an_empty_1x1_area_does_not_have_room_for_a_1x2_area() {
         val containerArea = PuzzleAreaFactory.buildPuzzleArea(1, 1)
         val newArea = PuzzleAreaFactory.buildPuzzleArea(2, 1)
         assertFalse(containerArea.hasRoomFor(newArea, PuzzleAreaCoordinate(0, 0)))
     }
 
     @Test
-    fun has_2x2_area_room_for_1x2_with_1_y_offset() {
+    fun an_empty_2x2_area_has_room_for_a_2x1_area_if_placed_with_1_y_offset() {
         val containerArea = PuzzleAreaFactory.buildPuzzleArea(2, 2)
         val newArea = PuzzleAreaFactory.buildPuzzleArea(1, 2)
         assertTrue(containerArea.hasRoomFor(newArea, PuzzleAreaCoordinate(0, 1)))
     }
 
     @Test
-    fun blank_area_map_of_5x3_area() {
-        val blankAreaMap = testArea.getBlankAreaMap()
-        assertEquals(4, blankAreaMap[PuzzleAreaCoordinate(0, 0)])
-        assertEquals(1, blankAreaMap[PuzzleAreaCoordinate(0, 2)])
-        assertEquals(1, blankAreaMap[PuzzleAreaCoordinate(4, 0)])
-        assertEquals(4, blankAreaMap[PuzzleAreaCoordinate(3, 1)])
+    fun an_empty_1x1_area_has_a_1_blank_area_of_size_1() {
+        val blankAreaMap = PuzzleAreaFactory.buildPuzzleArea(1, 1).getBlankAreaMap()
+        assertEquals(1, blankAreaMap[PuzzleAreaCoordinate(0, 0)])
+        assertEquals(1, blankAreaMap.size)
+    }
+
+    @Test
+    fun a_1x3_area_has_a_1_blank_area_of_size_3_if_all_tiles_contains_bottom_segments() {
+        val blankAreaMap = PuzzleAreaFactory.buildFromCsv('X', "B,B,B").getBlankAreaMap()
+        assertEquals(3, blankAreaMap[PuzzleAreaCoordinate(0, 0)])
+        assertEquals(1, blankAreaMap.size)
+    }
+
+    @Test
+    fun a_rotated_5_shaped_area_has_4_blank_areas() {
+        val csvBlankArea = """
+            B   ,   ,BR  ,F   ,LB
+            F   ,   ,F   ,    ,F
+            TR  ,F  ,LT  ,    ,T
+            """.trimIndent()
+        val blankAreaMap = PuzzleAreaFactory.buildFromCsv('X', csvBlankArea).getBlankAreaMap()
+        assertEquals(4, blankAreaMap[PuzzleAreaCoordinate(0, 0)]) // top left corner, starting with B
+        assertEquals(1, blankAreaMap[PuzzleAreaCoordinate(0, 2)]) // bottom left corner (TR) is enclosed
+        assertEquals(1, blankAreaMap[PuzzleAreaCoordinate(4, 0)]) // top right corner (LB) is enclosed
+        assertEquals(4, blankAreaMap[PuzzleAreaCoordinate(3, 1)]) // center, starting with F
         assertEquals(4, blankAreaMap.size)
     }
 
     @Test
-    fun blank_area_map_edge_cases() {
+    fun blank_areas_are_counted_separately_even_if_a_blank_tile_acts_as_border() { // in this case the TRB tile
         val testAreaCsv = """
             F   ,F  ,LB ,
             F   ,   ,F  ,
@@ -143,20 +155,25 @@ class PuzzleAreaTest {
             TR  ,F  ,LT ,
         """.trimIndent()
         val blankAreaMap = PuzzleAreaFactory.buildFromCsv('X', testAreaCsv).getBlankAreaMap()
-        assertEquals(5, blankAreaMap[PuzzleAreaCoordinate(1, 1)])
-        assertEquals(1, blankAreaMap[PuzzleAreaCoordinate(0, 4)])
-        assertEquals(7, blankAreaMap[PuzzleAreaCoordinate(2, 0)])
+        assertEquals(5, blankAreaMap[PuzzleAreaCoordinate(1, 1)]) // the blank area to left of TRB
+        assertEquals(1, blankAreaMap[PuzzleAreaCoordinate(0, 4)]) // bottom left corner is enclosed
+        assertEquals(7, blankAreaMap[PuzzleAreaCoordinate(2, 0)]) // the blank area to the right of TRB
         assertEquals(3, blankAreaMap.size)
     }
 
     @Test
-    fun number_of_filled_tiles_of_5x3_area() {
-        assertEquals(11, testArea.getNumberOfFilledTiles())
+    fun a_rotated_5_shaped_area_has_11_filled_tiles() {
+        val csvBlankArea = """
+            B   ,   ,BR  ,F   ,LB
+            F   ,   ,F   ,    ,F
+            TR  ,F  ,LT  ,    ,T
+            """.trimIndent()
+        assertEquals(11, PuzzleAreaFactory.buildFromCsv('X', csvBlankArea).getNumberOfFilledTiles())
     }
 
 
     @Test
-    fun piece_placement_into_an_empty_area_should_be_valid() {
+    fun piece_placement_into_an_empty_area_is_valid() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(0, 0), piece)
@@ -170,7 +187,7 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun piece_placement_with_disjoint_tiles_should_be_invalid() {
+    fun piece_placement_with_disjoint_tiles_is_invalid() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(0, 0), piece)
@@ -185,7 +202,7 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun piece_placement_with_offset_should_be_valid() {
+    fun piece_placement_with_offset_is_valid() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(1, 0), piece)
