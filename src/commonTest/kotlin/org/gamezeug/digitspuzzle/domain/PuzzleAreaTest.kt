@@ -15,7 +15,7 @@ class PuzzleAreaTest {
     private val testArea = PuzzleAreaFactory.buildFromCsv('X', csvBlankArea)
 
     @Test
-    fun `area 1x1`() {
+    fun build_1x1_area() {
         val expected = """
             [   ]
             [   ]
@@ -25,7 +25,7 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun `area 2x3`() {
+    fun build_2x3_area() {
         val numberOfRows = 2
         val numberOfColumns = 3
         val expected = """
@@ -43,7 +43,7 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun `build puzzle area with edges`() {
+    fun build_2x3_area_with_edges() {
         val numberOfRows = 2
         val numberOfColumns = 2
         val expected = """
@@ -61,7 +61,7 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun `replace tile of empty 1x1 area`() {
+    fun replace_tile_of_empty_1x1_area() {
         val emptyArea = PuzzleAreaFactory.buildPuzzleArea(1, 1)
         val replacements = TileReplacement(PuzzleAreaCoordinate(0, 0), fullTile())
 
@@ -76,7 +76,7 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun `replace multiple tiles of an empty 2x3 area`() {
+    fun replace_multiple_tiles_of_an_empty_2x3_area() {
         val numberOfRows = 2
         val numberOfColumns = 3
         val emptyArea = PuzzleAreaFactory.buildPuzzleArea(numberOfRows, numberOfColumns)
@@ -97,34 +97,34 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun `has 1x1 area room for 1x1`() {
+    fun has_1x1_area_room_for_1x1_area() {
         val area = PuzzleAreaFactory.buildPuzzleArea(1, 1)
         assertTrue(area.hasRoomFor(area, PuzzleAreaCoordinate(0, 0)))
     }
 
     @Test
-    fun `has 1x1 area room for 1x2`() {
+    fun has_1x1_area_room_for_1x2_area() {
         val containerArea = PuzzleAreaFactory.buildPuzzleArea(1, 1)
         val newArea = PuzzleAreaFactory.buildPuzzleArea(1, 2)
         assertFalse(containerArea.hasRoomFor(newArea, PuzzleAreaCoordinate(0, 0)))
     }
 
     @Test
-    fun `has 1x1 area room for 2x1`() {
+    fun has_1x1_area_room_for_2x1_area() {
         val containerArea = PuzzleAreaFactory.buildPuzzleArea(1, 1)
         val newArea = PuzzleAreaFactory.buildPuzzleArea(2, 1)
         assertFalse(containerArea.hasRoomFor(newArea, PuzzleAreaCoordinate(0, 0)))
     }
 
     @Test
-    fun `has 2x2 area room for 1x2 with 1 y-offset`() {
+    fun has_2x2_area_room_for_1x2_with_1_y_offset() {
         val containerArea = PuzzleAreaFactory.buildPuzzleArea(2, 2)
         val newArea = PuzzleAreaFactory.buildPuzzleArea(1, 2)
         assertTrue(containerArea.hasRoomFor(newArea, PuzzleAreaCoordinate(0, 1)))
     }
 
     @Test
-    fun `getBlankAreaMap for 5x3`() {
+    fun blank_area_map_of_5x3_area() {
         val blankAreaMap = testArea.getBlankAreaMap()
         assertEquals(4, blankAreaMap[PuzzleAreaCoordinate(0, 0)])
         assertEquals(1, blankAreaMap[PuzzleAreaCoordinate(0, 2)])
@@ -134,7 +134,7 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun `getBlankAreaMap breach test`() {
+    fun blank_area_map_edge_cases() {
         val testAreaCsv = """
             F   ,F  ,LB ,
             F   ,   ,F  ,
@@ -150,13 +150,13 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun `getNumberOfFilledTiles for 5x3`() {
+    fun number_of_filled_tiles_of_5x3_area() {
         assertEquals(11, testArea.getNumberOfFilledTiles())
     }
 
 
     @Test
-    fun `isValidPiecePlacement, valid, empty area`() {
+    fun piece_placement_into_an_empty_area_should_be_valid() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(0, 0), piece)
@@ -170,7 +170,7 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun `isValidPiecePlacement, invalid, tiles not disjoint`() {
+    fun piece_placement_with_disjoint_tiles_should_be_invalid() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(0, 0), piece)
@@ -185,7 +185,7 @@ class PuzzleAreaTest {
     }
 
     @Test
-    fun `isValidPiecePlacement, valid, tiles not disjoint, x-offset`() {
+    fun piece_placement_with_offset_should_be_valid() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(1, 0), piece)

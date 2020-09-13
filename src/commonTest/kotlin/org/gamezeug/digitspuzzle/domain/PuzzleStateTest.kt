@@ -8,7 +8,7 @@ import kotlin.test.assertTrue
 class PuzzleStateTest {
 
     @Test
-    fun `create initial puzzle state`() {
+    fun create_initial_puzzle_state() {
         val state = PuzzleStateFactory.createInitialPuzzleState(listOf(PuzzlePieceFactory.build1()))
         assertEquals(11, state.area.numberOfColumns)
         assertEquals(9, state.area.numberOfRows)
@@ -19,13 +19,13 @@ class PuzzleStateTest {
     }
 
     @Test
-    fun `isSolved, positive`() {
+    fun puzzle_without_available_pieces_should_be_solved() {
         val state = PuzzleStateFactory.createInitialPuzzleState(listOf())
         assertTrue(state.isSolved())
     }
 
     @Test
-    fun `isPieceAvailable, positive`() {
+    fun puzzle_piece_is_available_to_make_the_move() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(0, 0), piece)
@@ -40,7 +40,7 @@ class PuzzleStateTest {
     }
 
     @Test
-    fun `isPieceAvailable, negative`() {
+    fun puzzle_piece_is_not_available_to_make_the_move() {
         // Given
         val piece1 = PuzzlePieceFactory.build1()
         val piece2 = PuzzlePieceFactory.build2()
@@ -56,7 +56,7 @@ class PuzzleStateTest {
     }
 
     @Test
-    fun `placePiece, valid, area with edges`() {
+    fun place_puzzle_piece() {
         // Given
         val piece = PuzzlePieceFactory.build1()
         val move = Move(PuzzleAreaCoordinate(0, 0), piece)
@@ -91,7 +91,7 @@ class PuzzleStateTest {
     }
 
     @Test
-    fun `getAvailableValidMoves only piece0 available`() {
+    fun available_moves_when_only_piece_0_is_available() {
         // Given
         val piece0 = PuzzlePieceFactory.build0()
         val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 3)

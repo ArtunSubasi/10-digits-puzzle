@@ -8,43 +8,43 @@ import kotlin.test.assertTrue
 class TileTest {
 
     @Test
-    fun `isDisjoint - both empty`() {
+    fun two_empty_tiles_should_be_disjoint() {
         assertTrue(emptyTile().isDisjoint(emptyTile()))
     }
 
     @Test
-    fun `isDisjoint - empty and full`() {
+    fun an_empty_tile_should_be_disjoint_with_a_full_tile() {
         assertTrue(emptyTile().isDisjoint(fullTile()))
     }
 
     @Test
-    fun `isDisjoint - fifty fifty edge case`() {
+    fun two_half_full_tiles_with_displaces_segments_should_be_disjoint() {
         val tileWithTopAndRightSegments = Tile(topSegment = 'X', rightSegment = 'X')
         val tileWithBottomAndLeftSegments = Tile(bottomSegment = 'X', leftSegment = 'X')
         assertTrue(tileWithTopAndRightSegments.isDisjoint(tileWithBottomAndLeftSegments))
     }
 
     @Test
-    fun `isDisjoint - both full`() {
+    fun two_full_tiles_should_not_be_disjoint() {
         assertFalse(fullTile().isDisjoint(fullTile()))
     }
 
     @Test
-    fun rotate90DegreesClockwise() {
+    fun rotate_90_degrees_clockwise() {
         val tile = Tile(topSegment = '1', leftSegment = '2')
         val expected = Tile(topSegment = '2', rightSegment = '1')
         assertEquals(expected, tile.rotate90DegreesClockwise())
     }
 
     @Test
-    fun mirrorHorizontally() {
+    fun mirror_horizontally() {
         val tile = Tile(topSegment = '1', leftSegment = '2')
         val expected = Tile(topSegment = '1', rightSegment = '2')
         assertEquals(expected, tile.mirrorHorizontally())
     }
 
     @Test
-    fun `toString with empty tile`() {
+    fun toString_of_an_empty_tile() {
         val expected = """
             [   ]
             [   ]
@@ -54,7 +54,7 @@ class TileTest {
     }
 
     @Test
-    fun `toString with full tile`() {
+    fun toString_of_a_fulltile() {
         val expected = """
             [ X ]
             [X X]
@@ -64,7 +64,7 @@ class TileTest {
     }
 
     @Test
-    fun `toString with top and right segments only`() {
+    fun toString_with_top_and_right_segments_only() {
         val expected = """
             [ X ]
             [  X]
@@ -74,7 +74,7 @@ class TileTest {
     }
 
     @Test
-    fun `toString with bottom segment only with a custom char to print`() {
+    fun toString_with_bottom_segment_only_with_a_custom_char_to_print() {
         val expected = """
             [   ]
             [   ]
@@ -84,22 +84,22 @@ class TileTest {
     }
 
     @Test
-    fun `toStringFirstLine with full tile`() {
+    fun toStringFirstLine_with_full_tile() {
         assertEquals("[ X ]", fullTile().toStringFirstLine())
     }
 
     @Test
-    fun `toStringSecondLine with full tile`() {
+    fun toStringSecondLine_with_full_tile() {
         assertEquals("[X X]", fullTile().toStringSecondLine())
     }
 
     @Test
-    fun `toStringThirdLine with full tile`() {
+    fun toStringThirdLine_with_full_tile() {
         assertEquals("[ X ]", fullTile().toStringThirdLine())
     }
 
     @Test
-    fun `emptyTile has empty segments`() {
+    fun an_empty_tile_should_have_empty_segments() {
         assertTrue(emptyTile().hasAnyEmptySegment())
         assertTrue(emptyTile().hasEmptyLeftSegment())
         assertTrue(emptyTile().hasEmptyTopSegment())
@@ -109,7 +109,7 @@ class TileTest {
     }
 
     @Test
-    fun `fullTile has no empty segments`() {
+    fun a_full_tile_should_not_have_empty_segments() {
         assertFalse(fullTile().hasAnyEmptySegment())
         assertFalse(fullTile().hasEmptyLeftSegment())
         assertFalse(fullTile().hasEmptyTopSegment())

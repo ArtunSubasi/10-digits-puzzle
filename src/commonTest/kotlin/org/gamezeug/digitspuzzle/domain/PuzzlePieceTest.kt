@@ -272,7 +272,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun `rotate90DegreesClockwise Piece 1`() {
+    fun rotate_piece_1_90_degrees_clockwise() {
         val expected = """
             [   ][ 1 ][ 1 ][ 1 ][   ]
             [  1][1 1][1 1][1 1][1  ]
@@ -286,7 +286,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun `rotate180Degrees Piece 1`() {
+    fun rotate_piece_1_180_degrees() {
         val expected = """
             [   ]
             [   ]
@@ -312,7 +312,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun `rotate270DegreesClockwise Piece 1`() {
+    fun rotate_piece_1_270_degrees_clockwise() {
         val expected = """
             [   ][ 1 ][   ][ 1 ][   ]
             [  1][1 1][1 1][1 1][1  ]
@@ -326,7 +326,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun `mirrorHorizontally Piece 2`() {
+    fun mirror_piece_2_horizontally() {
         val expected = """
             [   ][ 2 ][   ]
             [  2][2 2][2  ]

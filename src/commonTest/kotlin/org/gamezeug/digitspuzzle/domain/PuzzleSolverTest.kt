@@ -7,7 +7,7 @@ import kotlin.test.assertTrue
 class PuzzleSolverTest {
 
     @Test
-    fun `solvePuzzle small`() {
+    fun puzzle_solvable() {
         val pieces = listOf(
                 PuzzlePieceFactory.build3(),
                 PuzzlePieceFactory.build8()
@@ -25,7 +25,7 @@ class PuzzleSolverTest {
     }
 
     @Test
-    fun `solvePuzzle not possible`() {
+    fun puzzle_not_solvable() {
         // Given
         val pieces = listOf(PuzzlePieceFactory.build0(), PuzzlePieceFactory.build1())
         val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(4, 3)
