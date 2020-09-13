@@ -27,7 +27,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x develop/gradlew
       - name: Test with Gradle
-        run: develop/gradlew -b develop/build.gradle.kts jvmTest
+        run: develop/gradlew -b develop/build.gradle.kts jvmTest jsTest
 
       # Package
       - name: Package with Gradle

@@ -27,7 +27,7 @@ jobs:
       - name: Grant execute permission for build scripts
         run: chmod +x master/gradlew master/prepare-release.sh
       - name: Test with Gradle
-        run: master/gradlew -b master/build.gradle.kts jvmTest
+        run: master/gradlew -b master/build.gradle.kts jvmTest jsTest
 
       # Prepare Semantic Release
       - name: Setup Node.js
