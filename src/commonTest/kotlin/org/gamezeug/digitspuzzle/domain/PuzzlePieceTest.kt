@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 class PuzzlePieceTest {
 
     @Test
-    fun build0() {
+    fun piece_0_has_the_correct_area_when_built() {
         val expected = """
             [   ][ 0 ][   ]
             [  0][0 0][0  ]
@@ -31,7 +31,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun build1() {
+    fun piece_1_has_the_correct_area_when_built() {
         val expected = """
             [   ]
             [   ]
@@ -57,7 +57,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun build2() {
+    fun piece_2_has_the_correct_area_when_built() {
         val expected = """
             [   ][ 2 ][   ]
             [  2][2 2][2  ]
@@ -83,7 +83,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun build3() {
+    fun piece_3_has_the_correct_area_when_built() {
         val expected = """
             [   ][ 3 ][   ]
             [  3][3 3][3  ]
@@ -109,7 +109,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun build4() {
+    fun piece_4_has_the_correct_area_when_built() {
         val expected = """
             [   ][   ][   ]
             [   ][   ][   ]
@@ -135,7 +135,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun build5() {
+    fun piece_5_has_the_correct_area_when_built() {
         val expected = """
             [   ][ 5 ][   ]
             [  5][5 5][5  ]
@@ -160,7 +160,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun build6() {
+    fun piece_6_has_the_correct_area_when_built() {
         val expected = """
             [   ][ 6 ][   ]
             [  6][6 6][6  ]
@@ -185,7 +185,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun build7() {
+    fun piece_7_has_the_correct_area_when_built() {
         val expected = """
             [   ][ 7 ][   ]
             [  7][7 7][7  ]
@@ -210,7 +210,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun build8() {
+    fun piece_8_has_the_correct_area_when_built() {
         val expected = """
             [   ][ 8 ][   ]
             [  8][8 8][8  ]
@@ -235,7 +235,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun build9() {
+    fun piece_9_has_the_correct_area_when_built() {
         val expected = """
             [   ][ 9 ][   ]
             [  9][9 9][9  ]
@@ -260,7 +260,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun rotateBy() {
+    fun rotating_a_piece_by_the_rotation_enum_has_the_same_effect_as_rotating_it_by_a_direct_method_call() {
         val puzzlePiece = PuzzlePieceFactory.build2()
         assertEquals(puzzlePiece, puzzlePiece.rotateBy(Rotation.NO_ROTATION))
         assertEquals(puzzlePiece.rotate90DegreesClockwise().toString(),
@@ -272,7 +272,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun rotate_piece_1_90_degrees_clockwise() {
+    fun rotating_piece_1_by_90_degrees_clockwise_leads_to_the_correct_area() {
         val expected = """
             [   ][ 1 ][ 1 ][ 1 ][   ]
             [  1][1 1][1 1][1 1][1  ]
@@ -286,7 +286,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun rotate_piece_1_180_degrees() {
+    fun rotating_piece_1_by_180_degrees_leads_to_the_correct_area() {
         val expected = """
             [   ]
             [   ]
@@ -312,7 +312,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun rotate_piece_1_270_degrees_clockwise() {
+    fun rotating_piece_1_by_270_degrees_clockwise_leads_to_the_correct_area() {
         val expected = """
             [   ][ 1 ][   ][ 1 ][   ]
             [  1][1 1][1 1][1 1][1  ]
@@ -326,7 +326,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun mirror_piece_2_horizontally() {
+    fun mirroring_the_piece_2_leads_to_the_correct_area() {
         val expected = """
             [   ][ 2 ][   ]
             [  2][2 2][2  ]
@@ -352,7 +352,7 @@ class PuzzlePieceTest {
     }
 
     @Test
-    fun mirrorBy() {
+    fun mirroring_a_piece_by_the_mirroring_enum_has_the_same_effect_as_mirroring_it_by_a_direct_method_call() {
         val puzzlePiece = PuzzlePieceFactory.build2()
         assertEquals(puzzlePiece.toString(), puzzlePiece.mirrorBy(Mirroring.NO_MIRRORING).toString())
         assertEquals(puzzlePiece.mirrorHorizontally().toString(),

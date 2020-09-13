@@ -7,35 +7,42 @@ import kotlin.test.assertTrue
 class PuzzleSolverTest {
 
     @Test
-    fun puzzle_solvable() {
+    fun a_5x5_puzzle_with_pieces_3_and_8_is_solvable() {
         val pieces = listOf(
                 PuzzlePieceFactory.build3(),
                 PuzzlePieceFactory.build8()
         )
         val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 5)
-        val puzzleState = PuzzleState(initialArea, pieces)
+        var puzzleState = PuzzleState(initialArea, pieces)
 
         // When
-        val solvePuzzleUseCase = PuzzleSolver(puzzleState)
-        val newPuzzleState = solvePuzzleUseCase.nextState()
+        val puzzleSolver = PuzzleSolver(puzzleState)
+        while (puzzleSolver.hasNextState() && !puzzleState.isSolved()) {
+            puzzleState = puzzleSolver.nextState()
+        }
 
         // Then
-        assertFalse(newPuzzleState.isSolved())
-        assertTrue(solvePuzzleUseCase.hasNextState())
+        assertTrue(puzzleState.isSolved())
     }
 
     @Test
-    fun puzzle_not_solvable() {
+    fun a_5x5_puzzle_with_pieces_5_and_8_is_not_solvable() {
         // Given
-        val pieces = listOf(PuzzlePieceFactory.build0(), PuzzlePieceFactory.build1())
-        val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(4, 3)
-        val puzzleState = PuzzleState(initialArea, pieces)
+        val pieces = listOf(
+                PuzzlePieceFactory.build5(),
+                PuzzlePieceFactory.build8()
+        )
+        val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(5, 5)
+        var puzzleState = PuzzleState(initialArea, pieces)
 
         // When
-        val solvePuzzleUseCase = PuzzleSolver(puzzleState)
+        val puzzleSolver = PuzzleSolver(puzzleState)
+        while (puzzleSolver.hasNextState() && !puzzleState.isSolved()) {
+            puzzleState = puzzleSolver.nextState()
+        }
 
         // Then
-        assertFalse(solvePuzzleUseCase.hasNextState())
+        assertFalse(puzzleState.isSolved())
     }
 
 }
