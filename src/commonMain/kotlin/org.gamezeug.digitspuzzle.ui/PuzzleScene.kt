@@ -95,7 +95,7 @@ private fun chooseSegmentColor(segmentChar: Char): RGBA {
 		'8' -> Colors["#FF00FF"]
 		'9' -> Colors["#FF7FFF"]
 		'X' -> Colors["#000000"]
-		else -> Colors["#FFFFFF"]
+		else -> Colors.PINK
 	}
 }
 
