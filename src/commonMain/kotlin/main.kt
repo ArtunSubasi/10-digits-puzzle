@@ -3,11 +3,10 @@ import com.soywiz.korge.scene.Module
 import com.soywiz.korim.color.Colors
 import com.soywiz.korinject.AsyncInjector
 import com.soywiz.korio.file.std.resourcesVfs
-import org.gamezeug.digitspuzzle.domain.PuzzlePieceFactory
 import org.gamezeug.digitspuzzle.domain.PuzzleSolver
 import org.gamezeug.digitspuzzle.domain.PuzzleStateFactory
-import org.gamezeug.digitspuzzle.ui.PuzzleScene
-import org.gamezeug.digitspuzzle.ui.PuzzleUiState
+import org.gamezeug.digitspuzzle.ui.scenes.PuzzleScene
+import org.gamezeug.digitspuzzle.ui.model.PuzzleUiState
 
 suspend fun main() = Korge(
 		config = Korge.Config(module = PuzzleModule)
@@ -24,8 +23,7 @@ object PuzzleModule: Module() {
 	}
 
 	private suspend fun createInitialPuzzleUiState(): PuzzleUiState {
-		val pieces = PuzzlePieceFactory.buildAll()
-		val puzzleState = PuzzleStateFactory.createInitialPuzzleState(pieces)
+		val puzzleState = PuzzleStateFactory.createInitialPuzzleState()
 		return PuzzleUiState(
 				lastPuzzleState = puzzleState,
 				puzzleSolver = PuzzleSolver(puzzleState),

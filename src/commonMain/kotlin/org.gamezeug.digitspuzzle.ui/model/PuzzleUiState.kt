@@ -1,4 +1,4 @@
-package org.gamezeug.digitspuzzle.ui
+package org.gamezeug.digitspuzzle.ui.model
 
 import org.gamezeug.digitspuzzle.domain.PuzzleSolver
 import org.gamezeug.digitspuzzle.domain.PuzzleState

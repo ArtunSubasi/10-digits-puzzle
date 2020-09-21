@@ -70,6 +70,8 @@ data class PuzzleState(
 
 object PuzzleStateFactory {
 
+    fun createInitialPuzzleState(): PuzzleState = createInitialPuzzleState(PuzzlePieceFactory.buildAll())
+
     fun createInitialPuzzleState(availablePieces: List<PuzzlePiece>): PuzzleState {
         val initialArea = PuzzleAreaFactory.buildPuzzleAreaWithEdges(9, 11)
         return PuzzleState(initialArea, availablePieces)

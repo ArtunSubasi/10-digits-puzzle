@@ -1,17 +1,11 @@
-package org.gamezeug.digitspuzzle.ui.components
+package org.gamezeug.digitspuzzle.ui.views
 
 import com.soywiz.korge.view.*
-import com.soywiz.korim.color.Colors
-import com.soywiz.korim.color.RGBA
-import com.soywiz.korim.vector.Context2d
-import com.soywiz.korma.geom.vector.line
-import com.soywiz.korma.geom.vector.rect
-import org.gamezeug.digitspuzzle.domain.Tile
-import org.gamezeug.digitspuzzle.ui.PuzzleUiState
+import org.gamezeug.digitspuzzle.ui.model.PuzzleUiState
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-class GameInfoComponent(private val uiState: PuzzleUiState, private val views: Views): Container() {
+class GameInfo(private val uiState: PuzzleUiState, private val views: Views): Container() {
 
 	init {
 		addStateCounterText()
