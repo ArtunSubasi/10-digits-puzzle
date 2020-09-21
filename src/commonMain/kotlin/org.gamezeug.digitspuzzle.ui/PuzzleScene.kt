@@ -95,7 +95,7 @@ private fun chooseSegmentColor(segmentChar: Char): RGBA {
 		'8' -> Colors["#FF00FF"]
 		'9' -> Colors["#FF7FFF"]
 		'X' -> Colors["#000000"]
-		else -> Colors.PINK
+		else -> Colors["#FFFFFF"]
 	}
 }
 
@@ -117,7 +117,7 @@ class TilePrinter(private val graphics: Graphics, private val tileWidth: Double,
 		}
 	}
 
-	fun printTile(x: Int, y: Int, tile: Tile) { //
+	fun printTile(x: Int, y: Int, tile: Tile) {
 		val x0: Double = x * tileWidth
 		val y0: Double = y * tileHeight
 		val x1: Double = x0 + tileWidth
