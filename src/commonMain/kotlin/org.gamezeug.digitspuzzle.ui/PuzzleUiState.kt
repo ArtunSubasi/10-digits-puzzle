@@ -12,5 +12,6 @@ data class PuzzleUiState constructor(
         var stateCounter: Long = 0,
         var numberOfStatesToTryEachFrame: Int = 100,
         var puzzleSolver: PuzzleSolver? = null,
-        val puzzleStartTime: TimeMark = TimeSource.Monotonic.markNow()
+        val puzzleStartTime: TimeMark = TimeSource.Monotonic.markNow(),
+        val version: String
 )
