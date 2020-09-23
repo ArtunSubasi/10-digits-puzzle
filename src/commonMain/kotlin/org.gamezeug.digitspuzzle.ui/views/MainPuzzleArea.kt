@@ -1,6 +1,8 @@
 package org.gamezeug.digitspuzzle.ui.views
 
-import com.soywiz.korge.view.*
+import com.soywiz.korge.view.Graphics
+import com.soywiz.korge.view.Views
+import com.soywiz.korge.view.addUpdater
 import com.soywiz.korim.color.Colors
 import com.soywiz.korim.color.RGBA
 import com.soywiz.korim.vector.Context2d
@@ -15,7 +17,6 @@ class MainPuzzleArea(private val uiState: PuzzleUiState, private val views: View
 
 	init {
 		useNativeRendering = true
-		addChild(GameInfo(uiState, views))
 		addUpdater {
 			if (!uiState.lastPuzzleState.isSolved()) {
 				drawPuzzleArea()

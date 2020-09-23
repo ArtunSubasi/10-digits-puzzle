@@ -15,15 +15,21 @@ class GameInfo(private val uiState: PuzzleUiState, private val views: Views): Co
 	}
 
 	private fun addStateCounterText() {
-		text(uiState.stateCounter.toString()) {
+		text("Moves:") {
 			position(10, 10)
-			addUpdater { text = uiState.stateCounter.toString() }
+		}
+		text("${uiState.stateCounter}") {
+			position(140, 10)
+			addUpdater { text = "${uiState.stateCounter}" }
 		}
 	}
 
 	private fun addElapsedTimeText() {
+		text("Duration:") {
+			position(10, 40)
+		}
 		text("") {
-			position(views.virtualWidth - 120, 10)
+			position(140, 40)
 			addUpdater {
 				if (!uiState.lastPuzzleState.isSolved()) {
 					text = uiState.puzzleStartTime.elapsedNow().toComponents { hours, minutes, seconds, _
