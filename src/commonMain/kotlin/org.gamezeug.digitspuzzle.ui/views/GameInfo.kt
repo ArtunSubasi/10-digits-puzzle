@@ -1,6 +1,10 @@
 package org.gamezeug.digitspuzzle.ui.views
 
-import com.soywiz.korge.view.*
+import com.soywiz.korge.view.Container
+import com.soywiz.korge.view.Views
+import com.soywiz.korge.view.addUpdater
+import com.soywiz.korge.view.position
+import com.soywiz.korge.view.text
 import org.gamezeug.digitspuzzle.ui.model.PuzzleUiState
 import kotlin.time.ExperimentalTime
 
@@ -10,7 +14,7 @@ class GameInfo(private val uiState: PuzzleUiState, private val views: Views): Co
 	init {
 		addStateCounterText()
 		addElapsedTimeText()
-		addStatePerSecondRateText()
+		addDeadEndText()
 		addVersionText()
 	}
 
@@ -41,14 +45,11 @@ class GameInfo(private val uiState: PuzzleUiState, private val views: Views): Co
 		}
 	}
 
-	private fun addStatePerSecondRateText() {
+	private fun addDeadEndText() {
 		text("") {
-			position(10, views.virtualHeight - 30)
+			position(10, 70)
 			addUpdater {
-				if (!uiState.lastPuzzleState.isSolved()) {
-					val statesPerSecondRate: Double = uiState.stateCounter.toDouble() / uiState.puzzleStartTime.elapsedNow().inSeconds
-					text = statesPerSecondRate.toString()
-				}
+				text = if (uiState.puzzleSolver == null && uiState.lastPuzzleState.isDeadEnd()) "Dead end!" else ""
 			}
 		}
 	}
